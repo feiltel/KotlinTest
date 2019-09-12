@@ -1,6 +1,8 @@
 package com.nut2014.kotlintest.network
 
+import com.nut2014.kotlintest.entity.BasePageResponse
 import com.nut2014.kotlintest.entity.BaseResponse
+import com.nut2014.kotlintest.entity.Cover
 import com.nut2014.kotlintest.entity.User
 import io.reactivex.Observable
 import retrofit2.http.GET
@@ -22,8 +24,8 @@ interface RetrofitService {
         @Query("userName") tel: String, @Query("passWord") passWord: String
     ): Observable<BaseResponse<User>>
 
-    @GET("getUsers")
-    fun getUsers(
-        @Query("userName") tel: String, @Query("passWord") passWord: String
-    ): Observable<BaseResponse<List<User>>>
+    @GET("cover/getAllPage")
+    fun getCovers(
+        @Query("pageNum") pageNum: Int
+    ): Observable<BasePageResponse<List<Cover>>>
 }

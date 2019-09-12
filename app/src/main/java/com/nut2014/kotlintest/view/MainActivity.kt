@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import com.nut2014.kotlintest.R
 import com.nut2014.kotlintest.base.BaseApplication
 import com.nut2014.kotlintest.network.runRxLambda
+import com.nut2014.kotlintest.utils.UserDataUtils
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.toast
 
@@ -17,6 +18,11 @@ class MainActivity : AppCompatActivity() {
 
         login_btn.setOnClickListener {
             login(username_et.text.toString(), userpass_et.text.toString())
+        }
+
+        if (UserDataUtils.getUserName(this).isNotEmpty() && UserDataUtils.getUserPass(this).isNotEmpty()) {
+            jumpHomeActivity()
+            finish()
         }
 
     }
@@ -55,7 +61,9 @@ class MainActivity : AppCompatActivity() {
         runRxLambda(BaseApplication.App().getService().login(userName, passWord), {
             toast(it.msg)
             if (it.code == 1) {
+                UserDataUtils.saveUser(this@MainActivity, it.data)
                 jumpHomeActivity()
+                finish()
             }
         }, {
             it?.printStackTrace()

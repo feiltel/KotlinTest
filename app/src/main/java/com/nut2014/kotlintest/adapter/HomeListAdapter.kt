@@ -1,21 +1,26 @@
 package com.nut2014.kotlintest.adapter
 
+import com.bumptech.glide.Glide
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.nut2014.kotlintest.R
-import com.nut2014.kotlintest.entity.User
+import com.nut2014.kotlintest.entity.Cover
 
 /**
  * 订单查询列表适配器
  * Created by admin on 2016/1/13.
  */
-class HomeListAdapter(layoutResId: Int, data: List<User>?) :
-    BaseQuickAdapter<User, BaseViewHolder>(layoutResId, data) {
+class HomeListAdapter(layoutResId: Int, data: List<Cover>?) :
+    BaseQuickAdapter<Cover, BaseViewHolder>(layoutResId, data) {
 
 
-    override fun convert(holder: BaseViewHolder, orderInfo: User) {
-        holder.setText(R.id.title_tv, orderInfo.userName)
-        holder.setText(R.id.des_tv, orderInfo.passWord)
-        holder.setText(R.id.pass_tv, orderInfo.realName)
+    override fun convert(holder: BaseViewHolder, orderInfo: Cover) {
+
+        holder.setText(R.id.cover_tv, orderInfo.coverDes)
+        holder.setText(R.id.tag_tv, orderInfo.tagName)
+        holder.setText(R.id.username_tv, orderInfo.userName)
+        holder.setText(R.id.like_tv, "${orderInfo.likeNumber}赞")
+        Glide.with(mContext).load(orderInfo.coverImgPath).into(holder.getView(R.id.cover_iv))
+        Glide.with(mContext).load(orderInfo.avatarPath).into(holder.getView(R.id.avatar_iv))
     }
 }
