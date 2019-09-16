@@ -1,5 +1,6 @@
 package com.nut2014.kotlintest.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
@@ -50,13 +51,16 @@ class HomeActivity : AppCompatActivity() {
      * 设置View
      */
     private fun setView() {
+        add_fab.setOnClickListener{
+            startActivity(Intent(this@HomeActivity, AddCoverActivity::class.java))
+        }
         toolbar_tb.setOnClickListener {
             list_rv.scrollToPosition(0)
             top_AppBarLayout.setExpanded(true)
         }
         list_rv.adapter = adapter
         adapter.openLoadAnimation()
-        list_rv.layoutManager = GridLayoutManager(this, 2)
+        list_rv.layoutManager = GridLayoutManager(this@HomeActivity, 2)
       //  list_rv.layoutManager = StaggeredGridLayoutManager(2, 1)
         adapter.onItemClickListener = BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
             toast("$position>>>>${dataList[position].coverDes}")

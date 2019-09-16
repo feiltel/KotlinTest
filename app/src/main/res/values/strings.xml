@@ -6,4 +6,5 @@
     <string name="login">登录</string>
     <string name="cover_image">cover image</string>
     <string name="sample_text">这是示例文字 This is sample text Ceci est un exemple de texte Questo è un testo di esempio</string>
+    <string name="add_cover_hint">为你的Cover写点什么吧</string>
 </resources>
