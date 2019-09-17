@@ -7,8 +7,11 @@ object UserDataUtils {
     fun saveUser(context: Context, user: User) {
         SpUtils.setString(context, "user", "name", user.userName)
         SpUtils.setString(context, "user", "pass", user.passWord)
+        SpUtils.setfInt(context, "user", "id", user.id)
     }
-
+    fun getId(context: Context): Int {
+        return SpUtils.getInt(context, "user", "id")
+    }
     fun getUserName(context: Context): String {
         return SpUtils.getString(context, "user", "name")
     }

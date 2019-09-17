@@ -60,8 +60,8 @@ class HomeActivity : AppCompatActivity() {
         }
         list_rv.adapter = adapter
         adapter.openLoadAnimation()
-        list_rv.layoutManager = GridLayoutManager(this@HomeActivity, 2)
-      //  list_rv.layoutManager = StaggeredGridLayoutManager(2, 1)
+       // list_rv.layoutManager = GridLayoutManager(this@HomeActivity, 2)
+       list_rv.layoutManager = StaggeredGridLayoutManager(2, 1)
         adapter.onItemClickListener = BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
             toast("$position>>>>${dataList[position].coverDes}")
             Glide.with(this@HomeActivity).load(dataList[position].coverImgPath).into(top_iv)

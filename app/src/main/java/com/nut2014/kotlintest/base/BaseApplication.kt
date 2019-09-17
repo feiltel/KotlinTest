@@ -38,7 +38,7 @@ class BaseApplication : Application() {
 
         retrofitService = Retrofit.Builder()
          //   .client(build.build())
-            .baseUrl("http://192.168.31.196:8080/")
+            .baseUrl("http://123.206.39.150:8080/")
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build().create(RetrofitService::class.java)

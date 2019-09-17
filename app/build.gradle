@@ -63,4 +63,8 @@ dependencies {
     //图片加载
     implementation 'com.github.bumptech.glide:glide:4.8.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
+
+    //图片选择器
+    implementation 'com.linchaolong.android:imagepicker:1.5'
+
 }
