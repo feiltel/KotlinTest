@@ -2,9 +2,9 @@ package com.nut2014.kotlintest.view
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.StaggeredGridLayoutManager
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import android.view.View
 import com.bumptech.glide.Glide
 import com.chad.library.adapter.base.BaseQuickAdapter
@@ -61,7 +61,7 @@ class HomeActivity : AppCompatActivity() {
         list_rv.adapter = adapter
         adapter.openLoadAnimation()
        // list_rv.layoutManager = GridLayoutManager(this@HomeActivity, 2)
-       list_rv.layoutManager = StaggeredGridLayoutManager(2, 1)
+       list_rv.layoutManager = androidx.recyclerview.widget.StaggeredGridLayoutManager(2, 1)
         adapter.onItemClickListener = BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
             toast("$position>>>>${dataList[position].coverDes}")
             Glide.with(this@HomeActivity).load(dataList[position].coverImgPath).into(top_iv)

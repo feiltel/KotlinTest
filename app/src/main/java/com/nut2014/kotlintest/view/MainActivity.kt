@@ -2,11 +2,12 @@ package com.nut2014.kotlintest.view
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.nut2014.kotlintest.R
 import com.nut2014.kotlintest.base.BaseApplication
 import com.nut2014.kotlintest.network.runRxLambda
 import com.nut2014.kotlintest.utils.PermissionUtils
+import com.nut2014.kotlintest.utils.UrlUtils
 import com.nut2014.kotlintest.utils.UserDataUtils
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.toast
@@ -25,6 +26,8 @@ class MainActivity : AppCompatActivity() {
             jumpHomeActivity()
             finish()
         }
+
+        toast(UrlUtils.baseIP())
 
     }
 

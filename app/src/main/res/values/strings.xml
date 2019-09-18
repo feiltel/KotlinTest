@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">KotlinTest</string>
+    <string name="app_name">Cover</string>
+    <string name="app_name_test">Cover(test)</string>
     <string name="user_login">用户登录</string>
     <string name="user_name">用户名</string>
     <string name="password">密码</string>
@@ -7,4 +8,6 @@
     <string name="cover_image">cover image</string>
     <string name="sample_text">这是示例文字 This is sample text Ceci est un exemple de texte Questo è un testo di esempio</string>
     <string name="add_cover_hint">为你的Cover写点什么吧</string>
+    <string name="error_gif">x or y bound size should be at least %1$dpx and file size should be no more than %2$sM</string>
+    <string name="save">保存</string>
 </resources>
