@@ -1,5 +1,6 @@
 package com.nut2014.kotlintest.view
 
+
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -10,18 +11,24 @@ import com.bumptech.glide.Glide
 import com.linchaolong.android.imagepicker.ImagePicker
 import com.linchaolong.android.imagepicker.cropper.CropImage
 import com.linchaolong.android.imagepicker.cropper.CropImageView
-import com.nut2014.kotlintest.R
 import com.nut2014.kotlintest.base.BaseApplication
 import com.nut2014.kotlintest.network.runRxLambda
 import com.nut2014.kotlintest.utils.ImageUtils
 import com.nut2014.kotlintest.utils.UserDataUtils
-
-
 import kotlinx.android.synthetic.main.activity_add_cover.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
+import okhttp3.ResponseBody
+import com.nut2014.kotlintest.R
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.delay
 import org.jetbrains.anko.toast
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.io.File
+import java.io.InputStream
 import java.net.URI
 
 
@@ -36,6 +43,8 @@ class AddCoverActivity : AppCompatActivity() {
         photo_iv.setOnClickListener {
             showPicSelect()
         }
+
+
 
     }
 

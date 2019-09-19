@@ -3,20 +3,17 @@ package com.nut2014.kotlintest.view
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import android.view.View
 import com.bumptech.glide.Glide
 import com.chad.library.adapter.base.BaseQuickAdapter
-import com.liaoinstan.springview.widget.SpringView
 import com.liaoinstan.springview.widget.SpringView.OnFreshListener
 import com.nut2014.kotlintest.R
-import com.nut2014.kotlintest.adapter.AliFooter
 import com.nut2014.kotlintest.adapter.AliHeader
 import com.nut2014.kotlintest.adapter.HomeListAdapter
 import com.nut2014.kotlintest.base.BaseApplication
 import com.nut2014.kotlintest.entity.Cover
 import com.nut2014.kotlintest.network.runRxLambda
+import com.nut2014.kotlintest.utils.UpdateUtils
 import kotlinx.android.synthetic.main.activity_home.*
 import org.jetbrains.anko.toast
 import java.util.*
@@ -36,6 +33,7 @@ class HomeActivity : AppCompatActivity() {
         init()
         setView()
         getUserListData(pageInt)
+        UpdateUtils(this).checkVersion()
     }
 
 
@@ -51,7 +49,7 @@ class HomeActivity : AppCompatActivity() {
      * 设置View
      */
     private fun setView() {
-        add_fab.setOnClickListener{
+        add_fab.setOnClickListener {
             startActivity(Intent(this@HomeActivity, AddCoverActivity::class.java))
         }
         toolbar_tb.setOnClickListener {
@@ -60,26 +58,27 @@ class HomeActivity : AppCompatActivity() {
         }
         list_rv.adapter = adapter
         adapter.openLoadAnimation()
-       // list_rv.layoutManager = GridLayoutManager(this@HomeActivity, 2)
-       list_rv.layoutManager = androidx.recyclerview.widget.StaggeredGridLayoutManager(2, 1)
+        // list_rv.layoutManager = GridLayoutManager(this@HomeActivity, 2)
+        list_rv.layoutManager = StaggeredGridLayoutManager(2, 1)
         adapter.onItemClickListener = BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
-            toast("$position>>>>${dataList[position].coverDes}")
-            Glide.with(this@HomeActivity).load(dataList[position].coverImgPath).into(top_iv)
+           // toast("$position>>>>${dataList[position].coverDes}")
+           // Glide.with(this@HomeActivity).load(dataList[position].coverImgPath).into(top_iv)
+            startActivity(Intent(this@HomeActivity, InfoActivity::class.java))
         }
         adapter.setOnLoadMoreListener({
             getUserListData(pageInt)
         }, list_rv)
-        list_sv.header=AliHeader(this@HomeActivity,false)
-     //   list_sv.footer=AliFooter(this@HomeActivity,false)
+        list_sv.header = AliHeader(this@HomeActivity, false)
+        //   list_sv.footer=AliFooter(this@HomeActivity,false)
         list_sv.setListener(object : OnFreshListener {
             override fun onRefresh() {
-                pageInt=1
+                pageInt = 1
                 getUserListData(pageInt)
 
             }
 
             override fun onLoadmore() {
-               // getUserListData(pageInt)
+                // getUserListData(pageInt)
             }
         })
 
@@ -90,7 +89,7 @@ class HomeActivity : AppCompatActivity() {
      */
     private fun getUserListData(pageNumber: Int = 1) {
         runRxLambda(BaseApplication.App().getService().getCovers(pageNumber), {
-            if(pageNumber==1){
+            if (pageNumber == 1) {
                 dataList.clear()
                 adapter.notifyDataSetChanged()
             }
@@ -101,10 +100,10 @@ class HomeActivity : AppCompatActivity() {
                 }
 
                 adapter.addData(it.data)
-                if (it.pageNum == it.pages) {
+                if (it.pageNum >= it.pages) {
                     adapter.loadMoreEnd()
                 } else {
-                    pageInt++
+                    pageInt=it.pageNum+1
                     adapter.loadMoreComplete()
                 }
             } else {

@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/> <!-- 用于硬盘缓存和读取 -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
 
     <application
             android:name=".base.BaseApplication"
@@ -16,11 +17,14 @@
             android:networkSecurityConfig="@xml/network_security_config"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
-            tools:replace="label"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme"
+            tools:replace="label">
+        <activity android:name=".view.InfoActivity">
+        </activity>
+
         <meta-data
                 android:name="BUILD_CHANNEL"
-                android:value="${BUILD_CHANNEL_VALUE}" />
+                android:value="${BUILD_CHANNEL_VALUE}"/>
 
         <provider
                 android:name="androidx.core.content.FileProvider"
@@ -31,8 +35,9 @@
             <meta-data
                     android:name="android.support.FILE_PROVIDER_PATHS"
                     android:resource="@xml/file_paths"
-                    tools:replace="android:resource" />
+                    tools:replace="android:resource"/>
         </provider>
+
         <activity android:name=".view.AddCoverActivity">
         </activity>
         <activity android:name=".view.TestActivity">
@@ -47,10 +52,9 @@
         </activity>
         <activity android:name=".view.HomeActivity">
         </activity>
-
         <activity
                 android:name="com.linchaolong.android.imagepicker.cropper.CropImageActivity"
-                android:theme="@style/Base.Theme.AppCompat" />
+                android:theme="@style/Base.Theme.AppCompat"/>
     </application>
 
 </manifest>

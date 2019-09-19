@@ -1,9 +1,6 @@
 package com.nut2014.kotlintest.network
 
-import com.nut2014.kotlintest.entity.BasePageResponse
-import com.nut2014.kotlintest.entity.BaseResponse
-import com.nut2014.kotlintest.entity.Cover
-import com.nut2014.kotlintest.entity.User
+import com.nut2014.kotlintest.entity.*
 import io.reactivex.Observable
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -43,4 +40,7 @@ interface RetrofitService {
     fun addCover(
         @Query("user_id") user_id: Int, @Query("coverImgPath") coverImgPath: String, @Query("coverDes") coverDes: String
     ): Observable<BaseResponse<String>>
+
+    @POST("app/getVersion")
+    fun getVersion(): Observable<BaseResponse<AppVersion>>
 }
