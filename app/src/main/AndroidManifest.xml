@@ -19,6 +19,14 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:replace="label">
+        <activity android:name=".view.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
         <activity android:name=".view.InfoActivity">
         </activity>
 
@@ -42,16 +50,10 @@
         </activity>
         <activity android:name=".view.TestActivity">
         </activity>
-        <activity android:name=".view.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <action android:name="android.intent.action.VIEW"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
-        <activity android:name=".view.HomeActivity">
-        </activity>
+        <activity
+                android:name=".view.LoginActivity"
+                android:theme="@style/MyDialogStyle"/>
+        <activity android:name=".view.HomeActivity"/>
         <activity
                 android:name="com.linchaolong.android.imagepicker.cropper.CropImageActivity"
                 android:theme="@style/Base.Theme.AppCompat"/>

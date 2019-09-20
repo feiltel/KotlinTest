@@ -1,6 +1,7 @@
 package com.nut2014.kotlintest.view
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -13,6 +14,7 @@ import com.nut2014.kotlintest.adapter.HomeListAdapter
 import com.nut2014.kotlintest.base.BaseApplication
 import com.nut2014.kotlintest.entity.Cover
 import com.nut2014.kotlintest.network.runRxLambda
+import com.nut2014.kotlintest.utils.PermissionUtils
 import com.nut2014.kotlintest.utils.UpdateUtils
 import kotlinx.android.synthetic.main.activity_home.*
 import org.jetbrains.anko.toast
@@ -21,10 +23,12 @@ import java.util.*
 /**
  * 列表功能示例
  */
-class HomeActivity : AppCompatActivity() {
-    private var pageInt: Int = 1
-    private lateinit var adapter: HomeListAdapter
-    private lateinit var dataList: ArrayList<Cover>
+class HomeActivity : AppCompatActivity(),CoverFragment.OnFragmentInteractionListener {
+    override fun onFragmentInteraction(uri: Uri) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -32,8 +36,8 @@ class HomeActivity : AppCompatActivity() {
         setSupportActionBar(toolbar_tb)
         init()
         setView()
-        getUserListData(pageInt)
         UpdateUtils(this).checkVersion()
+        PermissionUtils.checkAll(this)
     }
 
 
@@ -41,8 +45,7 @@ class HomeActivity : AppCompatActivity() {
      * 初始化
      */
     private fun init() {
-        dataList = ArrayList()
-        adapter = HomeListAdapter(R.layout.list_item, dataList)
+
     }
 
     /**
@@ -50,70 +53,16 @@ class HomeActivity : AppCompatActivity() {
      */
     private fun setView() {
         add_fab.setOnClickListener {
-            startActivity(Intent(this@HomeActivity, AddCoverActivity::class.java))
+            startActivity(Intent(this@HomeActivity, TestActivity::class.java))
         }
         toolbar_tb.setOnClickListener {
             list_rv.scrollToPosition(0)
             top_AppBarLayout.setExpanded(true)
         }
-        list_rv.adapter = adapter
-        adapter.openLoadAnimation()
-        // list_rv.layoutManager = GridLayoutManager(this@HomeActivity, 2)
-        list_rv.layoutManager = StaggeredGridLayoutManager(2, 1)
-        adapter.onItemClickListener = BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
-           // toast("$position>>>>${dataList[position].coverDes}")
-           // Glide.with(this@HomeActivity).load(dataList[position].coverImgPath).into(top_iv)
-            startActivity(Intent(this@HomeActivity, InfoActivity::class.java))
-        }
-        adapter.setOnLoadMoreListener({
-            getUserListData(pageInt)
-        }, list_rv)
-        list_sv.header = AliHeader(this@HomeActivity, false)
-        //   list_sv.footer=AliFooter(this@HomeActivity,false)
-        list_sv.setListener(object : OnFreshListener {
-            override fun onRefresh() {
-                pageInt = 1
-                getUserListData(pageInt)
 
-            }
 
-            override fun onLoadmore() {
-                // getUserListData(pageInt)
-            }
-        })
 
     }
 
-    /**
-     * 获取数据
-     */
-    private fun getUserListData(pageNumber: Int = 1) {
-        runRxLambda(BaseApplication.App().getService().getCovers(pageNumber), {
-            if (pageNumber == 1) {
-                dataList.clear()
-                adapter.notifyDataSetChanged()
-            }
-            list_sv.onFinishFreshAndLoad()
-            if (it.code == 1) {
-                if (it.data.isNotEmpty()) {
-                    Glide.with(this@HomeActivity).load(it.data[0].coverImgPath).into(top_iv)
-                }
 
-                adapter.addData(it.data)
-                if (it.pageNum >= it.pages) {
-                    adapter.loadMoreEnd()
-                } else {
-                    pageInt=it.pageNum+1
-                    adapter.loadMoreComplete()
-                }
-            } else {
-                adapter.loadMoreFail()
-            }
-        }, {
-            list_sv.onFinishFreshAndLoad()
-            it?.printStackTrace()
-            adapter.loadMoreFail()
-
-        })
-    }
 }

@@ -61,9 +61,18 @@
 
             </androidx.appcompat.widget.Toolbar>
         </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+
     </com.google.android.material.appbar.AppBarLayout>
 
+    <fragment
+            android:tag="@string/app_name"
+            android:name="com.nut2014.kotlintest.view.CoverFragment"
+            android:layout_width="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:layout_height="match_parent"/>
     <com.liaoinstan.springview.widget.SpringView
+            android:visibility="gone"
             android:id="@+id/list_sv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

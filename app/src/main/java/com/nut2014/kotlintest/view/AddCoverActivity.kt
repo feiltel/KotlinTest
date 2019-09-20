@@ -6,46 +6,74 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.linchaolong.android.imagepicker.ImagePicker
 import com.linchaolong.android.imagepicker.cropper.CropImage
 import com.linchaolong.android.imagepicker.cropper.CropImageView
+import com.nut2014.kotlintest.R
 import com.nut2014.kotlintest.base.BaseApplication
+import com.nut2014.kotlintest.entity.Cover
+import com.nut2014.kotlintest.entity.MyTag
 import com.nut2014.kotlintest.network.runRxLambda
 import com.nut2014.kotlintest.utils.ImageUtils
 import com.nut2014.kotlintest.utils.UserDataUtils
 import kotlinx.android.synthetic.main.activity_add_cover.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
-import okhttp3.ResponseBody
-import com.nut2014.kotlintest.R
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
-import kotlinx.coroutines.delay
 import org.jetbrains.anko.toast
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.io.File
-import java.io.InputStream
 import java.net.URI
 
 
 class AddCoverActivity : AppCompatActivity() {
     private var imagePicker: ImagePicker? = null
     private lateinit var uploadImgUrl: String
+    private var selectTagId: Int = 0
+
+
+    private lateinit var tagList: List<MyTag>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_cover)
         setSupportActionBar(toolbar_tb)
+
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         photo_iv.setOnClickListener {
             showPicSelect()
         }
 
+        getTagRequest()
+        tag_sp!!.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                selectTagId = tagList[position].id
+            }
 
+            override fun onNothingSelected(parent: AdapterView<*>) {
 
+            }
+        }
+    }
+
+    private fun getTagRequest() {
+        runRxLambda(BaseApplication.App().getService().getAllTag(
+        ), {
+            val dataList = mutableListOf<String>()
+            if (it.code == 1) {
+                tagList = it.data
+                for (datum in tagList) {
+                    dataList.add(datum.name)
+                }
+            }
+            val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, dataList)
+            tag_sp.adapter = arrayAdapter
+        }, {
+            toast(it?.message.toString())
+            it?.printStackTrace()
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -64,8 +92,11 @@ class AddCoverActivity : AppCompatActivity() {
     }
 
     private fun saveCover() {
+
+        val cover =
+            Cover(UserDataUtils.getId(this@AddCoverActivity), uploadImgUrl, content_et.text.toString(), 0, "", "", "",selectTagId)
         runRxLambda(BaseApplication.App().getService().addCover(
-            UserDataUtils.getId(this@AddCoverActivity), uploadImgUrl, content_et.text.toString()
+            cover
         ), {
             toast(it.msg)
         }, {

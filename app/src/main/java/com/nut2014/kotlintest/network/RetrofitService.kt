@@ -4,10 +4,7 @@ import com.nut2014.kotlintest.entity.*
 import io.reactivex.Observable
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import retrofit2.http.Multipart
-import retrofit2.http.POST
-import retrofit2.http.Part
-import retrofit2.http.Query
+import retrofit2.http.*
 
 
 /**
@@ -38,9 +35,12 @@ interface RetrofitService {
 
     @POST("cover/add")
     fun addCover(
-        @Query("user_id") user_id: Int, @Query("coverImgPath") coverImgPath: String, @Query("coverDes") coverDes: String
+       @Body cover: Cover
     ): Observable<BaseResponse<String>>
 
     @POST("app/getVersion")
     fun getVersion(): Observable<BaseResponse<AppVersion>>
+
+    @POST("tag/getAll")
+    fun getAllTag(): Observable<BaseResponse<List<MyTag>>>
 }
