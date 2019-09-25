@@ -8,13 +8,14 @@
     <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/top_AppBarLayout"
             android:layout_width="match_parent"
-            android:layout_height="240dp">
+            android:layout_height="296dp">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:layout_width="match_parent"
                 android:id="@+id/top_coll"
 
-                android:layout_height="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:background="@color/colorAccent"
                 app:collapsedTitleGravity="left"
                 app:collapsedTitleTextAppearance="@style/ToolBarTitleText"
@@ -62,29 +63,27 @@
             </androidx.appcompat.widget.Toolbar>
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
+        <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tab_collect"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <fragment
-            android:tag="@string/app_name"
-            android:name="com.nut2014.kotlintest.view.CoverFragment"
-            android:layout_width="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            android:layout_height="match_parent"/>
-    <com.liaoinstan.springview.widget.SpringView
-            android:visibility="gone"
-            android:id="@+id/list_sv"
+    <androidx.viewpager.widget.ViewPager
+            android:id="@+id/vp_collect"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-        <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/list_rv"
-                android:padding="0dp"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                />
-    </com.liaoinstan.springview.widget.SpringView>
+    <fragment
+
+            android:tag="@string/app_name"
+            android:name="com.nut2014.kotlintest.view.CoverFragment"
+            android:layout_width="0dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:layout_height="0dp"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/add_fab"
@@ -96,38 +95,3 @@
             android:layout_margin="16dp"
             android:src="@drawable/ic_add_black_24dp"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-        <!--
-        <?xml version="1.0" encoding="utf-8"?>
-        <android.support.constraint.ConstraintLayout
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:context=".view.HomeActivity">
-
-            <android.support.v7.widget.Toolbar
-                    app:titleTextColor="@android:color/primary_text_dark"
-                    app:title="@string/user_name"
-                    android:background="@color/colorPrimary"
-                    android:paddingTop="24dp"
-                    android:id="@+id/toolbar_tb"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintHorizontal_bias="1.0"
-                    android:layout_width="match_parent"
-                    android:layout_height="80dp"/>
-
-            <android.support.v7.widget.RecyclerView
-                    android:inputType="textPersonName"
-                    android:id="@+id/list_rv"
-                    android:layout_marginTop="80dp"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-
-        </android.support.constraint.ConstraintLayout>-->

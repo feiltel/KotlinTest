@@ -54,7 +54,7 @@ class LoginActivity : AppCompatActivity() {
             if (it.code == 1) {
                 UserDataUtils.saveUser(this@LoginActivity, it.data)
                 toast("登录成功")
-                // jumpHomeActivity()
+                setResult(1)
                 finish()
             }
         }, {

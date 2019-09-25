@@ -23,6 +23,12 @@ interface RetrofitService {
         @Query("userName") tel: String, @Query("passWord") passWord: String
     ): Observable<BaseResponse<User>>
 
+    @POST("cover/getUserPage")
+    fun getUserPage(
+        @Query("pageNum") pageNum: Int,@Query("userId") user_id: Int
+    ): Observable<BasePageResponse<List<Cover>>>
+
+
     @POST("cover/getAllPage")
     fun getCovers(
         @Query("pageNum") pageNum: Int

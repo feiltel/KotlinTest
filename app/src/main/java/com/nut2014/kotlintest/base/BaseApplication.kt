@@ -56,7 +56,7 @@ class BaseApplication : Application() {
 
                 val request = original.newBuilder()
 
-                    .header("token", UserDataUtils.getToken(instance))
+                    .header("token", UserDataUtils.getToken())
 
                     .method(original.method, original.body)
 

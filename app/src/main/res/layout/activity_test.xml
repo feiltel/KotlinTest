@@ -7,11 +7,6 @@
                 android:layout_height="match_parent"
                 tools:context=".view.TestActivity">
 
-            <fragment
-                    android:tag="@string/app_name"
-                    android:name="com.nut2014.kotlintest.view.CoverFragment"
-                    android:id="@+id/list_rv"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -94,10 +94,22 @@ class AddCoverActivity : AppCompatActivity() {
     private fun saveCover() {
 
         val cover =
-            Cover(UserDataUtils.getId(this@AddCoverActivity), uploadImgUrl, content_et.text.toString(), 0, "", "", "",selectTagId)
+            Cover(
+                UserDataUtils.getId(),
+                uploadImgUrl,
+                content_et.text.toString(),
+                0,
+                "",
+                "",
+                "",
+                selectTagId
+            )
         runRxLambda(BaseApplication.App().getService().addCover(
             cover
         ), {
+            if (it.code == 1) {
+                finish()
+            }
             toast(it.msg)
         }, {
             toast(it?.message.toString())
