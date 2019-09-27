@@ -1,16 +1,21 @@
 package com.nut2014.kotlintest.view
 
 
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
+import com.jaeger.library.StatusBarUtil
+import com.leon.lfilepickerlibrary.LFilePicker
 import com.linchaolong.android.imagepicker.ImagePicker
 import com.linchaolong.android.imagepicker.cropper.CropImage
 import com.linchaolong.android.imagepicker.cropper.CropImageView
@@ -39,6 +44,8 @@ class AddCoverActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_cover)
+        StatusBarUtil.setColor(this, ContextCompat.getColor(this, R.color.colorPrimary), 0)
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         setSupportActionBar(toolbar_tb)
 
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
@@ -55,6 +62,18 @@ class AddCoverActivity : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>) {
 
             }
+        }
+        music_btn.setOnClickListener {
+            val REQUESTCODE_FROM_ACTIVITY = 1000
+            LFilePicker()
+                .withActivity(this)
+                .withMaxNum(1)
+                .withRequestCode(REQUESTCODE_FROM_ACTIVITY)
+                .withStartPath("/storage/emulated/0/Download")//指定初始显示路径
+                .withIsGreater(true)//过滤文件大小 小于指定大小的文件
+                .withFileSize(10)//过滤文件大小 小于指定大小的文件
+                .withFileSize((500 * 1024).toLong())//指定文件大小为500K
+                .start()
         }
     }
 
@@ -92,9 +111,13 @@ class AddCoverActivity : AppCompatActivity() {
     }
 
     private fun saveCover() {
-
+        if (uploadImgUrl.isEmpty()) {
+            toast("请先选择图片")
+        }
+        println(UserDataUtils.getId())
         val cover =
             Cover(
+                0,
                 UserDataUtils.getId(),
                 uploadImgUrl,
                 content_et.text.toString(),
@@ -122,6 +145,7 @@ class AddCoverActivity : AppCompatActivity() {
 
         imagePicker = ImagePicker()
         imagePicker!!.setCropImage(true)
+
         imagePicker!!.startChooser(this, object : ImagePicker.Callback() {
             override fun onPickImage(imageUri: Uri) {
 
@@ -175,7 +199,17 @@ class AddCoverActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        imagePicker!!.onActivityResult(this, requestCode, resultCode, data)
+        imagePicker?.onActivityResult(this, requestCode, resultCode, data)
+
+        if (resultCode === Activity.RESULT_OK) {
+            if (requestCode === 1000) {
+                //如果是文件选择模式，需要获取选择的所有文件的路径集合
+                //List<String> list = data.getStringArrayListExtra(Constant.RESULT_INFO);//Constant.RESULT_INFO == "paths"
+                val list = data?.getStringArrayListExtra("paths")
+                toast("选中了" + list!!.size + "个文件")
+
+            }
+        }
     }
 
 }

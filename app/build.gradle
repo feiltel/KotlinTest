@@ -83,6 +83,10 @@ dependencies {
 
     implementation 'co.lujun:androidtagview:1.1.7'//tagViewGroup
 
+    implementation 'com.jaeger.statusbarutil:library:1.5.1'
+
+    implementation 'com.leon:lfilepickerlibrary:1.8.0'
+
     implementation project(path: ':crashlib')
 
 }

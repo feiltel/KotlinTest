@@ -52,7 +52,7 @@ class LoginActivity : AppCompatActivity() {
         runRxLambda(BaseApplication.App().getService().login(userName, passWord), {
             toast(it.msg)
             if (it.code == 1) {
-                UserDataUtils.saveUser(this@LoginActivity, it.data)
+                UserDataUtils.saveUser(it.data)
                 toast("登录成功")
                 setResult(1)
                 finish()

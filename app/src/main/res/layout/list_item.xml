@@ -95,6 +95,8 @@
                 app:layout_constraintBottom_toBottomOf="@+id/avatar_cv"/>
 
         <TextView
+                android:text="12"
+                android:drawableRight="@drawable/ic_favorite_8dp"
                 android:gravity="center"
                 android:layout_marginEnd="8dp"
                 app:layout_constraintTop_toTopOf="@id/avatar_cv"

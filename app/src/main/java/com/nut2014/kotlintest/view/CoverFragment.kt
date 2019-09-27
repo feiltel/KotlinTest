@@ -16,9 +16,11 @@ import com.nut2014.kotlintest.adapter.HomeListAdapter
 import com.nut2014.kotlintest.base.BaseApplication
 import com.nut2014.kotlintest.entity.Cover
 import com.nut2014.kotlintest.network.runRxLambda
+import com.nut2014.kotlintest.utils.CacheUtils
 import com.nut2014.kotlintest.utils.Contant
 import com.nut2014.kotlintest.utils.UserDataUtils
 import kotlinx.android.synthetic.main.fragment_cover.*
+import org.jetbrains.anko.support.v4.startActivity
 import org.jetbrains.anko.support.v4.toast
 import java.util.*
 
@@ -54,6 +56,12 @@ class CoverFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         init()
         setView()
+        if (param1 == 0) {
+            val coverList = CacheUtils.getCoverList()
+            if (coverList.isNotEmpty()) {
+                adapter.addData(coverList)
+            }
+        }
         getUserListData(pageInt)
     }
 
@@ -66,7 +74,9 @@ class CoverFragment : Fragment() {
         adapter.openLoadAnimation()
         list_rv.layoutManager = StaggeredGridLayoutManager(2, 1)
         adapter.onItemClickListener = BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
-            startActivity(Intent(activity, InfoActivity::class.java))
+            val intent = Intent(activity, InfoActivity::class.java)
+            intent.putExtra("cover", dataList[position].toJson())
+            startActivity(intent)
         }
         adapter.setOnLoadMoreListener({
             getUserListData(pageInt)
@@ -163,6 +173,11 @@ class CoverFragment : Fragment() {
         listener = null
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        CacheUtils.saveCoverList(dataList)
+
+    }
 
     interface OnFragmentInteractionListener {
         // TODO: Update argument type and name

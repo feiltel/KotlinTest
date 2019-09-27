@@ -8,24 +8,22 @@
     <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/top_AppBarLayout"
             android:layout_width="match_parent"
-            android:layout_height="296dp">
+            android:layout_height="wrap_content">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:layout_width="match_parent"
                 android:id="@+id/top_coll"
-
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="240dp"
                 android:background="@color/colorAccent"
                 app:collapsedTitleGravity="left"
                 app:collapsedTitleTextAppearance="@style/ToolBarTitleText"
                 app:contentScrim="@color/colorPrimary"
                 app:expandedTitleGravity="left|bottom"
-                app:expandedTitleMarginBottom="10dp"
-                app:expandedTitleMarginTop="24dp"
-                app:expandedTitleTextAppearance="@style/ToolBarTitleText"
+                app:expandedTitleMarginBottom="16dp"
+                app:expandedTitleMarginStart="16dp"
+                app:expandedTitleTextAppearance="@style/ToolBarTitleTextBig"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed"
-                app:title=" "
+                app:title="@string/app_name"
                 app:titleEnabled="true">
 
             <ImageView
@@ -39,35 +37,20 @@
                     app:layout_collapseParallaxMultiplier="0.7"/>
 
             <androidx.appcompat.widget.Toolbar
+                    android:fitsSystemWindows="true"
                     android:layout_marginTop="24dp"
                     android:id="@+id/toolbar_tb"
-                    app:layout_scrollFlags="exitUntilCollapsed"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
-                    app:layout_collapseMode="pin"
-                    app:title="@null">
-
-                <FrameLayout
-                        android:layout_marginEnd="20dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                    <TextView
-                            android:layout_gravity="center"
-                            android:text="@string/app_name"
-                            style="@style/ToolBarTitleText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
-                </FrameLayout>
-
+                    app:layout_collapseMode="pin">
             </androidx.appcompat.widget.Toolbar>
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
         <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tab_collect"
+                app:tabBackground="@android:color/white"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/white"/>
+                android:layout_height="48dp"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 

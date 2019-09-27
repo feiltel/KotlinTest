@@ -6,12 +6,18 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:windowTranslucentStatus">true</item>
+       <!-- <item name="android:windowTranslucentStatus">true</item>-->
     </style>
     <style name="ToolBarTitleText" parent="TextAppearance.AppCompat.Medium">
         <item name="android:textColor">#ffffffff</item>
-        <item name="android:textSize">18dp</item>
+        <item name="android:textSize">18sp</item>
         <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="ToolBarTitleTextBig" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">#ffffffff</item>
+        <item name="android:textSize">20sp</item>
+
     </style>
 
     <style name="MyDialogStyle" parent="Theme.AppCompat.Light.NoActionBar">

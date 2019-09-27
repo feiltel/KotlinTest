@@ -13,10 +13,10 @@ import retrofit2.http.*
  */
 interface RetrofitService {
 
-    @POST("getUser")
-    fun loadOrg(
-        @Query("id") tel: String
-    ): Observable<User>
+    @POST("user/get")
+    fun getUser(
+        @Query("id") id: Int
+    ): Observable<BaseResponse<User>>
 
     @POST("login")
     fun login(
@@ -49,4 +49,12 @@ interface RetrofitService {
 
     @POST("tag/getAll")
     fun getAllTag(): Observable<BaseResponse<List<MyTag>>>
+
+
+    @POST("outLogin")
+    fun outLogin(@Query("userId") userId: Int): Observable<BaseResponse<User>>
+
+
+    @POST("user/updateUserInfo")
+    fun updateUserInfo(@Body user: User): Observable<BaseResponse<String>>
 }
