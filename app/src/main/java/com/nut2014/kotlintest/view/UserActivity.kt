@@ -11,7 +11,7 @@ import com.linchaolong.android.imagepicker.ImagePicker
 import com.linchaolong.android.imagepicker.cropper.CropImage
 import com.linchaolong.android.imagepicker.cropper.CropImageView
 import com.nut2014.kotlintest.R
-import com.nut2014.kotlintest.base.BaseApplication
+import com.nut2014.kotlintest.base.MyApplication
 import com.nut2014.kotlintest.entity.User
 import com.nut2014.kotlintest.network.runRxLambda
 import com.nut2014.kotlintest.utils.ImageUtils
@@ -106,7 +106,7 @@ class UserActivity : AppCompatActivity() {
     }
 
     private fun unloadPic(file: File, isUserIcon: Boolean) {
-        runRxLambda(BaseApplication.App().getService().uploadImage(
+        runRxLambda(MyApplication.application().getService().uploadImage(
             ImageUtils.getPart(file),
             RequestBody.create("text/plain".toMediaTypeOrNull(), "image-type")
         ), {
@@ -135,7 +135,7 @@ class UserActivity : AppCompatActivity() {
         if (isUserIcon) {
             user = User("", "", "", UserDataUtils.getId(), "", "", imgUrl)
         }
-        runRxLambda(BaseApplication.App().getService().updateUserInfo(
+        runRxLambda(MyApplication.application().getService().updateUserInfo(
             user
         ), {
             toast(it.msg)
@@ -170,7 +170,7 @@ class UserActivity : AppCompatActivity() {
 
     private fun outLogin() {
         runRxLambda(
-            BaseApplication.App().getService().outLogin(
+            MyApplication.application().getService().outLogin(
                 UserDataUtils.getId()
             ), {
                 if (it.code == 1) {

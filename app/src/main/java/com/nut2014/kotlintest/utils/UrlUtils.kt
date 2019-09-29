@@ -1,7 +1,7 @@
 package com.nut2014.kotlintest.utils
 
 import android.content.pm.PackageManager
-import com.nut2014.kotlintest.base.BaseApplication
+import com.nut2014.kotlintest.base.MyApplication
 
 object UrlUtils {
 
@@ -11,8 +11,8 @@ object UrlUtils {
     private val channel: String?
         get() {
             try {
-                val pm = BaseApplication.App().packageManager
-                val appInfo = pm.getApplicationInfo(BaseApplication.App().packageName, PackageManager.GET_META_DATA)
+                val pm = MyApplication.application().packageManager
+                val appInfo = pm.getApplicationInfo(MyApplication.application().packageName, PackageManager.GET_META_DATA)
                 return appInfo.metaData.getString("BUILD_CHANNEL")
             } catch (ignored: PackageManager.NameNotFoundException) {
             }

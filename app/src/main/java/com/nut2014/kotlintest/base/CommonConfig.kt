@@ -2,6 +2,9 @@ package com.nut2014.kotlintest.base
 
 import com.google.gson.Gson
 
+/**
+ * JSON 转换工具类
+ */
 open class CommonConfig {
 
     companion object {

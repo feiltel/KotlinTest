@@ -1,7 +1,6 @@
 package com.nut2014.kotlintest.adapter;
 
 import android.content.Context;
-import androidx.core.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,13 +9,15 @@ import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
+import androidx.core.content.ContextCompat;
 import com.liaoinstan.springview.container.BaseFooter;
 import com.nut2014.kotlintest.R;
 
 /**
- * Created by Administrator on 2016/3/21.
+ * @author feiltel 2019/9/29 0029
+ * 上拉加载
  */
+
 public class AliFooter extends BaseFooter {
     private Context context;
     private int rotationSrc;

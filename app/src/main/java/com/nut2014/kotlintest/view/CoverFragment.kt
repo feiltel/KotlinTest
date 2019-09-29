@@ -13,15 +13,13 @@ import com.liaoinstan.springview.widget.SpringView
 import com.nut2014.kotlintest.R
 import com.nut2014.kotlintest.adapter.AliHeader
 import com.nut2014.kotlintest.adapter.HomeListAdapter
-import com.nut2014.kotlintest.base.BaseApplication
+import com.nut2014.kotlintest.base.MyApplication
 import com.nut2014.kotlintest.entity.Cover
 import com.nut2014.kotlintest.network.runRxLambda
 import com.nut2014.kotlintest.utils.CacheUtils
-import com.nut2014.kotlintest.utils.Contant
+import com.nut2014.kotlintest.utils.Constant
 import com.nut2014.kotlintest.utils.UserDataUtils
 import kotlinx.android.synthetic.main.fragment_cover.*
-import org.jetbrains.anko.support.v4.startActivity
-import org.jetbrains.anko.support.v4.toast
 import java.util.*
 
 
@@ -102,7 +100,7 @@ class CoverFragment : Fragment() {
         val userId = UserDataUtils.getId()
 
         val covers =
-            if (param1!! <= 0) BaseApplication.App().getService().getCovers(pageNumber) else BaseApplication.App().getService().getUserPage(
+            if (param1!! <= 0) MyApplication.application().getService().getCovers(pageNumber) else MyApplication.application().getService().getUserPage(
                 pageNumber,
                 userId
             )
@@ -123,11 +121,6 @@ class CoverFragment : Fragment() {
                     adapter.loadMoreComplete()
                 }
             } else {
-                if (it.code == 401) {
-                    toast(it.msg)
-
-                    startActivityForResult(Intent(activity, LoginActivity::class.java), Contant.loginRequstCode)
-                }
                 adapter.loadMoreFail()
             }
         }, {
@@ -154,7 +147,7 @@ class CoverFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == Contant.loginRequstCode && resultCode == 1) {
+        if (requestCode == Constant.loginRequstCode && resultCode == 1) {
             onButtonPressed("")
         }
     }

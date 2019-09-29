@@ -14,7 +14,6 @@
                 android:layout_width="match_parent"
                 android:id="@+id/top_coll"
                 android:layout_height="240dp"
-                android:background="@color/colorAccent"
                 app:collapsedTitleGravity="left"
                 app:collapsedTitleTextAppearance="@style/ToolBarTitleText"
                 app:contentScrim="@color/colorPrimary"
@@ -32,7 +31,7 @@
                     android:layout_height="match_parent"
                     android:fitsSystemWindows="true"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/default_avator"
+                    android:src="@drawable/ic_default"
                     app:layout_collapseMode="parallax"
                     app:layout_collapseParallaxMultiplier="0.7"/>
 

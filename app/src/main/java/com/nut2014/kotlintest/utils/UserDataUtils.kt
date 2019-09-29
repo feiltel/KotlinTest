@@ -2,44 +2,44 @@ package com.nut2014.kotlintest.utils
 
 import android.app.Activity
 import android.content.Intent
-import com.nut2014.kotlintest.base.BaseApplication
+import com.nut2014.kotlintest.base.MyApplication
 import com.nut2014.kotlintest.entity.User
 import com.nut2014.kotlintest.view.LoginActivity
 import org.jetbrains.anko.toast
 
 object UserDataUtils {
     fun saveUser(user: User) {
-        SpUtils.setString(BaseApplication.App(), "user", "name", user.userName)
-        SpUtils.setString(BaseApplication.App(), "user", "pass", user.passWord)
-        SpUtils.setfInt(BaseApplication.App(), "user", "id", user.id)
-        SpUtils.setString(BaseApplication.App(), "user", "token", user.token)
-        SpUtils.setString(BaseApplication.App(), "user", "BgImg", user.bgImg)
-        SpUtils.setString(BaseApplication.App(), "user", "userIcon", user.avatarPath)
+        SpUtils.setString(MyApplication.application(), "user", "name", user.userName)
+        SpUtils.setString(MyApplication.application(), "user", "pass", user.passWord)
+        SpUtils.setfInt(MyApplication.application(), "user", "id", user.id)
+        SpUtils.setString(MyApplication.application(), "user", "token", user.token)
+        SpUtils.setString(MyApplication.application(), "user", "BgImg", user.bgImg)
+        SpUtils.setString(MyApplication.application(), "user", "userIcon", user.avatarPath)
 
     }
 
     fun getId(): Int {
-        return SpUtils.getInt(BaseApplication.App(), "user", "id")
+        return SpUtils.getInt(MyApplication.application(), "user", "id")
     }
 
     fun getUserName(): String {
-        return SpUtils.getString(BaseApplication.App(), "user", "name")
+        return SpUtils.getString(MyApplication.application(), "user", "name")
     }
 
     fun getUserPass(): String {
-        return SpUtils.getString(BaseApplication.App(), "user", "pass")
+        return SpUtils.getString(MyApplication.application(), "user", "pass")
     }
 
     fun getToken(): String {
-        return SpUtils.getString(BaseApplication.App(), "user", "token")
+        return SpUtils.getString(MyApplication.application(), "user", "token")
     }
 
     fun getBgImg(): String {
-        return SpUtils.getString(BaseApplication.App(), "user", "BgImg")
+        return SpUtils.getString(MyApplication.application(), "user", "BgImg")
     }
 
     fun getAvatarPath(): String {
-        return SpUtils.getString(BaseApplication.App(), "user", "userIcon")
+        return SpUtils.getString(MyApplication.application(), "user", "userIcon")
     }
 
     fun isLoginAndJump(context: Activity): Boolean {
@@ -48,8 +48,16 @@ object UserDataUtils {
             return true
         } else {
             context.toast("请先登录")
-            context.startActivityForResult(Intent(context, LoginActivity::class.java), Contant.loginRequstCode)
+            context.startActivityForResult(Intent(context, LoginActivity::class.java), Constant.loginRequstCode)
             return false
         }
     }
+
+    fun jumpLogin(currentActivity: Activity) {
+        currentActivity.startActivityForResult(
+            Intent(currentActivity, LoginActivity::class.java),
+            Constant.loginRequstCode
+        )
+    }
+
 }

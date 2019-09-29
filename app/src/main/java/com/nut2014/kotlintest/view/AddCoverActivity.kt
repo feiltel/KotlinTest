@@ -20,7 +20,7 @@ import com.linchaolong.android.imagepicker.ImagePicker
 import com.linchaolong.android.imagepicker.cropper.CropImage
 import com.linchaolong.android.imagepicker.cropper.CropImageView
 import com.nut2014.kotlintest.R
-import com.nut2014.kotlintest.base.BaseApplication
+import com.nut2014.kotlintest.base.MyApplication
 import com.nut2014.kotlintest.entity.Cover
 import com.nut2014.kotlintest.entity.MyTag
 import com.nut2014.kotlintest.network.runRxLambda
@@ -37,7 +37,9 @@ import java.net.URI
 class AddCoverActivity : AppCompatActivity() {
     private var imagePicker: ImagePicker? = null
     private lateinit var uploadImgUrl: String
+    private lateinit var uploadMusicFileUrl: String
     private var selectTagId: Int = 0
+    private val musicFileRequestCode = 1000
 
 
     private lateinit var tagList: List<MyTag>
@@ -64,21 +66,20 @@ class AddCoverActivity : AppCompatActivity() {
             }
         }
         music_btn.setOnClickListener {
-            val REQUESTCODE_FROM_ACTIVITY = 1000
+
             LFilePicker()
                 .withActivity(this)
-                .withMaxNum(1)
-                .withRequestCode(REQUESTCODE_FROM_ACTIVITY)
+                .withMutilyMode(false)//单选模式
+                .withRequestCode(musicFileRequestCode)
                 .withStartPath("/storage/emulated/0/Download")//指定初始显示路径
                 .withIsGreater(true)//过滤文件大小 小于指定大小的文件
-                .withFileSize(10)//过滤文件大小 小于指定大小的文件
-                .withFileSize((500 * 1024).toLong())//指定文件大小为500K
+                .withFileSize((5 * 1024).toLong())//指定文件大小为500K
                 .start()
         }
     }
 
     private fun getTagRequest() {
-        runRxLambda(BaseApplication.App().getService().getAllTag(
+        runRxLambda(MyApplication.application().getService().getAllTag(
         ), {
             val dataList = mutableListOf<String>()
             if (it.code == 1) {
@@ -115,11 +116,13 @@ class AddCoverActivity : AppCompatActivity() {
             toast("请先选择图片")
         }
         println(UserDataUtils.getId())
+        println(uploadMusicFileUrl)
         val cover =
             Cover(
                 0,
                 UserDataUtils.getId(),
                 uploadImgUrl,
+                uploadMusicFileUrl,
                 content_et.text.toString(),
                 0,
                 "",
@@ -127,7 +130,7 @@ class AddCoverActivity : AppCompatActivity() {
                 "",
                 selectTagId
             )
-        runRxLambda(BaseApplication.App().getService().addCover(
+        runRxLambda(MyApplication.application().getService().addCover(
             cover
         ), {
             if (it.code == 1) {
@@ -177,7 +180,7 @@ class AddCoverActivity : AppCompatActivity() {
     }
 
     private fun unloadPic(file: File) {
-        runRxLambda(BaseApplication.App().getService().uploadImage(
+        runRxLambda(MyApplication.application().getService().uploadImage(
             ImageUtils.getPart(file),
             RequestBody.create("text/plain".toMediaTypeOrNull(), "image-type")
         ), {
@@ -201,15 +204,35 @@ class AddCoverActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         imagePicker?.onActivityResult(this, requestCode, resultCode, data)
 
-        if (resultCode === Activity.RESULT_OK) {
-            if (requestCode === 1000) {
-                //如果是文件选择模式，需要获取选择的所有文件的路径集合
-                //List<String> list = data.getStringArrayListExtra(Constant.RESULT_INFO);//Constant.RESULT_INFO == "paths"
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == musicFileRequestCode) {
                 val list = data?.getStringArrayListExtra("paths")
-                toast("选中了" + list!!.size + "个文件")
+                if (!list.isNullOrEmpty()) {
+                    unloadMusicFile(File(list[0]))
+                }
 
             }
         }
+    }
+
+    private fun unloadMusicFile(file: File) {
+        runRxLambda(MyApplication.application().getService().uploadImage(
+            ImageUtils.getPart(file),
+            RequestBody.create("text/plain".toMediaTypeOrNull(), "image-type")
+        ), {
+            if (it.code == 1) {
+                uploadMusicFileUrl = it.data
+                music_btn.setText(file.name)
+            } else {
+                toast(it.msg)
+            }
+
+        }, {
+
+            it?.printStackTrace()
+
+
+        })
     }
 
 }

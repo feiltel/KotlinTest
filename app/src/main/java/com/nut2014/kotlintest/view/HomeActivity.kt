@@ -10,7 +10,7 @@ import androidx.fragment.app.FragmentPagerAdapter
 import com.bumptech.glide.Glide
 import com.jaeger.library.StatusBarUtil
 import com.nut2014.kotlintest.R
-import com.nut2014.kotlintest.base.BaseApplication
+import com.nut2014.kotlintest.base.MyApplication
 import com.nut2014.kotlintest.network.runRxLambda
 import com.nut2014.kotlintest.utils.PermissionUtils
 import com.nut2014.kotlintest.utils.UpdateUtils
@@ -77,14 +77,17 @@ class HomeActivity : AppCompatActivity(), CoverFragment.OnFragmentInteractionLis
     }
 
     private fun getUserInfo() {
+        val bgImg = UserDataUtils.getBgImg()
+        if(bgImg.isNotEmpty() ){
+            Glide.with(this).load(bgImg).into(top_iv)
+        }
         if (UserDataUtils.getId() > 0) {
-            runRxLambda(BaseApplication.App().getService().getUser(UserDataUtils.getId()), {
+            runRxLambda(MyApplication.application().getService().getUser(UserDataUtils.getId()), {
                 if (it.code == 1) {
                     UserDataUtils.saveUser(it.data)
                     setUserView()
                 }
             }, {
-                Glide.with(this).load(UserDataUtils.getBgImg()).into(top_iv)
                 it?.printStackTrace()
             })
         }

@@ -16,7 +16,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 android:id="@+id/top_iv"
                 android:scaleType="centerCrop"
-                android:src="@drawable/bg"
+                android:src="@drawable/login_top"
                 android:layout_width="match_parent"
                 android:layout_height="120dp"/>
 

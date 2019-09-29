@@ -12,14 +12,22 @@ import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * 下载文件
+ */
 public class DownloadFile extends AsyncTask<String, String, String> {
 
     private KProgressHUD progressDialog;
-    private String fileName;
-    private String folder;
     private boolean isDownloaded;
     private Context context;
     private DownloadCallBack downloadCallBack;
+
+    public DownloadFile setShowProgress(boolean showProgress) {
+        isShowProgress = showProgress;
+        return this;
+    }
+
+    private boolean isShowProgress = true;
 
 
     public DownloadFile(Context context, DownloadCallBack downloadCallBack) {
@@ -40,11 +48,14 @@ public class DownloadFile extends AsyncTask<String, String, String> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        this.progressDialog = new KProgressHUD(context)
-                .setStyle(KProgressHUD.Style.ANNULAR_DETERMINATE)
-                .setCancellable(false)
-                .setMaxProgress(100)
-                .show();
+        if (isShowProgress){
+            this.progressDialog = new KProgressHUD(context)
+                    .setStyle(KProgressHUD.Style.ANNULAR_DETERMINATE)
+                    .setCancellable(false)
+                    .setMaxProgress(100)
+                    .show();
+        }
+
     }
 
     /**
@@ -68,13 +79,13 @@ public class DownloadFile extends AsyncTask<String, String, String> {
             String timestamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
 
             //Extract file name from URL
-            fileName = f_url[0].substring(f_url[0].lastIndexOf('/') + 1, f_url[0].length());
+            String fileName = f_url[0].substring(f_url[0].lastIndexOf('/') + 1, f_url[0].length());
 
             //Append timestamp to file name
             fileName = timestamp + "_" + fileName;
 
             //External directory path to save file
-            folder = Environment.getExternalStorageDirectory() + File.separator + "AAAAAAA/";
+            String folder = Environment.getExternalStorageDirectory() + File.separator + "AAAAAAA/";
 
             //Create androiddeft folder if it does not exist
             File directory = new File(folder);
@@ -123,14 +134,19 @@ public class DownloadFile extends AsyncTask<String, String, String> {
      */
     protected void onProgressUpdate(String... progress) {
         // setting progress percentage
-        progressDialog.setProgress(Integer.parseInt(progress[0]));
+        if (progressDialog!=null){
+            progressDialog.setProgress(Integer.parseInt(progress[0]));
+        }
+
     }
 
 
     @Override
     protected void onPostExecute(String message) {
         // dismiss the dialog after the file was downloaded
-        this.progressDialog.dismiss();
+        if (progressDialog!=null) {
+            this.progressDialog.dismiss();
+        }
         assert downloadCallBack != null;
         downloadCallBack.success(message);
     }

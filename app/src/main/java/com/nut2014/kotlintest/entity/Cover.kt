@@ -6,6 +6,7 @@ data class Cover(
     val id: Int,
     val user_id: Int,
     val coverImgPath: String,
+    val coverMusicPath: String,
     val coverDes: String,
     val likeNumber: Int,
     val avatarPath: String,

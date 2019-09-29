@@ -9,33 +9,43 @@ import android.util.Log;
 
 import java.io.IOException;
 
+/**
+ * 播放音乐服务
+ */
 public class PlayerServices extends Service {
-    private String path = "mnt/sdcard/test.mp3";
+    private static final String TAG = "PlayerServices";
+
     private MediaPlayer player;
 
     @Override
     public IBinder onBind(Intent intent) {
-        //当执行完了onCreate后，就会执行onBind把操作歌曲的方法返回
         return new MyBinder();
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        //这里只执行一次，用于准备播放器
         player = new MediaPlayer();
-        try {
-            player.setDataSource(path);
-            //准备资源
-            player.prepare();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Log.e("服务", "准备播放音乐");
+        Log.d(TAG, "onCreate");
     }
 
-    //该方法包含关于歌曲的操作
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy");
+    }
+
     public class MyBinder extends Binder {
+        public void prepare(String path) {
+            try {
+                player.setDataSource(path);
+                //准备资源
+                player.prepare();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Log.d(TAG, "准备播放音乐");
+        }
 
         //判断是否处于播放状态
         public boolean isPlaying() {
@@ -43,14 +53,27 @@ public class PlayerServices extends Service {
         }
 
         //播放或暂停歌曲
-        public void play() {
+        public void pause() {
+            Log.d(TAG, "pause");
             if (player.isPlaying()) {
                 player.pause();
-            } else {
+            }
+        }
+
+        public void stop() {
+            Log.d(TAG, "stop");
+            if (player.isPlaying()) {
+                player.stop();
+            }
+        }
+
+        public void play() {
+            Log.d(TAG, "play");
+            if (!player.isPlaying()) {
                 player.start();
             }
-            Log.e("服务", "播放音乐");
         }
+
 
         //返回歌曲的长度，单位为毫秒
         public int getDuration() {
@@ -58,7 +81,7 @@ public class PlayerServices extends Service {
         }
 
         //返回歌曲目前的进度，单位为毫秒
-        public int getCurrenPostion() {
+        public int getCurrentPosition() {
             return player.getCurrentPosition();
         }
 
