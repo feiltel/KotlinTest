@@ -3,15 +3,15 @@ package com.nut2014.kotlintest.view
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.jaeger.library.StatusBarUtil
@@ -20,24 +20,34 @@ import com.linchaolong.android.imagepicker.ImagePicker
 import com.linchaolong.android.imagepicker.cropper.CropImage
 import com.linchaolong.android.imagepicker.cropper.CropImageView
 import com.nut2014.kotlintest.R
+import com.nut2014.kotlintest.base.BaseActivity
+import com.nut2014.kotlintest.base.CommonConfig
 import com.nut2014.kotlintest.base.MyApplication
 import com.nut2014.kotlintest.entity.Cover
 import com.nut2014.kotlintest.entity.MyTag
 import com.nut2014.kotlintest.network.runRxLambda
 import com.nut2014.kotlintest.utils.ImageUtils
+import com.nut2014.kotlintest.utils.MusicUtils
 import com.nut2014.kotlintest.utils.UserDataUtils
 import kotlinx.android.synthetic.main.activity_add_cover.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
 import org.jetbrains.anko.toast
+import java.io.BufferedOutputStream
 import java.io.File
+import java.io.FileOutputStream
 import java.net.URI
 
 
-class AddCoverActivity : AppCompatActivity() {
+class AddCoverActivity : BaseActivity() {
+    private var coverData: Cover? = null
+
     private var imagePicker: ImagePicker? = null
     private lateinit var uploadImgUrl: String
     private lateinit var uploadMusicFileUrl: String
+    private var uploadMusicName: String = ""
+    private var uploadMusicArtist: String = ""
+    private var uploadMusicCoverPath: String = ""
     private var selectTagId: Int = 0
     private val musicFileRequestCode = 1000
 
@@ -46,11 +56,25 @@ class AddCoverActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_cover)
-        StatusBarUtil.setColor(this, ContextCompat.getColor(this, R.color.colorPrimary), 0)
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
-        setSupportActionBar(toolbar_tb)
 
+        StatusBarUtil.setColor(this, ContextCompat.getColor(this, R.color.colorPrimary), 0)
+        setSupportActionBar(toolbar_tb)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        if (intent.hasExtra("cover")) {
+            coverData = CommonConfig.fromJson(intent.getStringExtra("cover"), Cover::class.java)
+
+            uploadImgUrl = coverData!!.coverImgPath
+            uploadMusicFileUrl = coverData!!.coverMusicPath
+            content_et.setText(coverData!!.coverDes)
+            music_btn.setText(coverData!!.musicName)
+            uploadMusicName = coverData!!.musicName
+            uploadMusicArtist = coverData!!.artistName
+            uploadMusicCoverPath = coverData!!.musicCoverPath
+            selectTagId = coverData!!.tag_id
+
+            Glide.with(this@AddCoverActivity).load(uploadImgUrl).into(photo_iv)
+        }
+
         photo_iv.setOnClickListener {
             showPicSelect()
         }
@@ -71,7 +95,7 @@ class AddCoverActivity : AppCompatActivity() {
                 .withActivity(this)
                 .withMutilyMode(false)//单选模式
                 .withRequestCode(musicFileRequestCode)
-                .withStartPath("/storage/emulated/0/Download")//指定初始显示路径
+                .withStartPath("/storage/emulated/0/netease/cloudmusic/Music/")//指定初始显示路径
                 .withIsGreater(true)//过滤文件大小 小于指定大小的文件
                 .withFileSize((5 * 1024).toLong())//指定文件大小为500K
                 .start()
@@ -82,14 +106,22 @@ class AddCoverActivity : AppCompatActivity() {
         runRxLambda(MyApplication.application().getService().getAllTag(
         ), {
             val dataList = mutableListOf<String>()
+            var selectPos = 0
             if (it.code == 1) {
                 tagList = it.data
-                for (datum in tagList) {
-                    dataList.add(datum.name)
+                tagList.forEachIndexed { index, myTag ->
+                    dataList.add(myTag.name)
+                    if (selectTagId > 0 && selectTagId == myTag.id) {
+                        selectPos = index
+                    }
                 }
+
             }
             val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, dataList)
             tag_sp.adapter = arrayAdapter
+            if (selectPos > 0) {
+                tag_sp.setSelection(selectPos)
+            }
         }, {
             toast(it?.message.toString())
             it?.printStackTrace()
@@ -117,9 +149,13 @@ class AddCoverActivity : AppCompatActivity() {
         }
         println(UserDataUtils.getId())
         println(uploadMusicFileUrl)
+        var coverId = 0
+        if (coverData!!.id > 0) {
+            coverId = coverData!!.id
+        }
         val cover =
             Cover(
-                0,
+                coverId,
                 UserDataUtils.getId(),
                 uploadImgUrl,
                 uploadMusicFileUrl,
@@ -128,6 +164,9 @@ class AddCoverActivity : AppCompatActivity() {
                 "",
                 "",
                 "",
+                uploadMusicName,
+                uploadMusicArtist,
+                uploadMusicCoverPath,
                 selectTagId
             )
         runRxLambda(MyApplication.application().getService().addCover(
@@ -215,16 +254,55 @@ class AddCoverActivity : AppCompatActivity() {
         }
     }
 
+    private fun uploadCoverImg(coverPicture: Bitmap) {
+        val folder = Environment.getExternalStorageDirectory().toString() + File.separator + "nut2014/coverImg.jpeg"
+        if (!File(folder).parentFile.exists()) {
+            File(folder).parentFile.mkdirs()
+        }
+        val coverFile = File(folder)
+        val bos = BufferedOutputStream(FileOutputStream(coverFile))
+        coverPicture.compress(Bitmap.CompressFormat.JPEG, 90, bos)
+        bos.flush()
+        bos.close()
+        runRxLambda(MyApplication.application().getService().uploadImage(
+            ImageUtils.getPart(coverFile),
+            RequestBody.create("text/plain".toMediaTypeOrNull(), "image-type")
+        ), {
+            if (isActive) {
+                if (it.code == 1) {
+                    uploadMusicCoverPath = it.data
+                } else {
+                    toast(it.msg)
+                }
+            }
+
+        }, {
+
+            it?.printStackTrace()
+
+
+        })
+    }
+
     private fun unloadMusicFile(file: File) {
+        uploadMusicName = MusicUtils.getCoverTitle(file.path)
+        uploadMusicArtist = MusicUtils.getCoverArtist(file.path)
+        val coverPicture = MusicUtils.getCoverPicture(file.path)
+        uploadCoverImg(coverPicture)
+
+
+
         runRxLambda(MyApplication.application().getService().uploadImage(
             ImageUtils.getPart(file),
             RequestBody.create("text/plain".toMediaTypeOrNull(), "image-type")
         ), {
-            if (it.code == 1) {
-                uploadMusicFileUrl = it.data
-                music_btn.setText(file.name)
-            } else {
-                toast(it.msg)
+            if (isActive) {
+                if (it.code == 1) {
+                    uploadMusicFileUrl = it.data
+                    music_btn.setText(file.name)
+                } else {
+                    toast(it.msg)
+                }
             }
 
         }, {

@@ -70,6 +70,11 @@
                 android:name=".service.PlayerServices"
                 android:exported="true"
                 android:enabled="true"/>
+
+        <service
+                android:name=".service.MusicService"
+                android:exported="true"
+                android:enabled="true"/>
     </application>
 
 </manifest>

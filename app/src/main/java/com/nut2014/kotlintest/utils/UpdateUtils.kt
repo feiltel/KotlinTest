@@ -52,6 +52,10 @@ class UpdateUtils(private val context: Context) {
             override fun error(msg: String) {
 
             }
+
+            override fun progress(progress: Int) {
+
+            }
         }).execute(downloadPath)
     }
 

@@ -18,7 +18,15 @@ import java.util.Date;
 public class DownloadFile extends AsyncTask<String, String, String> {
 
     private KProgressHUD progressDialog;
+
+
     private boolean isDownloaded;
+
+    public void setCanDownload(boolean canDownload) {
+        this.canDownload = canDownload;
+    }
+
+    private boolean canDownload = true;
     private Context context;
     private DownloadCallBack downloadCallBack;
 
@@ -31,6 +39,7 @@ public class DownloadFile extends AsyncTask<String, String, String> {
 
 
     public DownloadFile(Context context, DownloadCallBack downloadCallBack) {
+        canDownload = true;
         this.context = context;
         this.downloadCallBack = downloadCallBack;
     }
@@ -39,6 +48,8 @@ public class DownloadFile extends AsyncTask<String, String, String> {
         void success(String path);
 
         void error(String msg);
+
+        void progress(int progress);
     }
 
     /**
@@ -48,7 +59,7 @@ public class DownloadFile extends AsyncTask<String, String, String> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        if (isShowProgress){
+        if (isShowProgress) {
             this.progressDialog = new KProgressHUD(context)
                     .setStyle(KProgressHUD.Style.ANNULAR_DETERMINATE)
                     .setCancellable(false)
@@ -85,7 +96,7 @@ public class DownloadFile extends AsyncTask<String, String, String> {
             fileName = timestamp + "_" + fileName;
 
             //External directory path to save file
-            String folder = Environment.getExternalStorageDirectory() + File.separator + "AAAAAAA/";
+            String folder = Environment.getExternalStorageDirectory() + File.separator + "nut2014/";
 
             //Create androiddeft folder if it does not exist
             File directory = new File(folder);
@@ -101,7 +112,7 @@ public class DownloadFile extends AsyncTask<String, String, String> {
 
             long total = 0;
 
-            while ((count = input.read(data)) != -1) {
+            while ((count = input.read(data)) != -1 && canDownload) {
                 total += count;
                 // publishing the progress....
                 // After this onProgressUpdate will be called
@@ -134,9 +145,11 @@ public class DownloadFile extends AsyncTask<String, String, String> {
      */
     protected void onProgressUpdate(String... progress) {
         // setting progress percentage
-        if (progressDialog!=null){
+        if (progressDialog != null) {
             progressDialog.setProgress(Integer.parseInt(progress[0]));
         }
+        assert downloadCallBack != null;
+        downloadCallBack.progress(Integer.parseInt(progress[0]));
 
     }
 
@@ -144,7 +157,7 @@ public class DownloadFile extends AsyncTask<String, String, String> {
     @Override
     protected void onPostExecute(String message) {
         // dismiss the dialog after the file was downloaded
-        if (progressDialog!=null) {
+        if (progressDialog != null) {
             this.progressDialog.dismiss();
         }
         assert downloadCallBack != null;

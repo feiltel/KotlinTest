@@ -12,5 +12,8 @@ data class Cover(
     val avatarPath: String,
     val userName: String,
     val tagName: String,
+    val musicName: String,
+    val artistName: String,
+    val musicCoverPath: String,
     val tag_id: Int
 ) : CommonConfig()
