@@ -150,7 +150,8 @@ class AddCoverActivity : BaseActivity() {
         println(UserDataUtils.getId())
         println(uploadMusicFileUrl)
         var coverId = 0
-        if (coverData!!.id > 0) {
+
+        if (coverData != null && coverData!!.id > 0) {
             coverId = coverData!!.id
         }
         val cover =

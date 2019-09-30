@@ -2,11 +2,9 @@ package com.nut2014.kotlintest.view
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
 import com.nut2014.kotlintest.R
-import com.nut2014.kotlintest.utils.PermissionUtils
-import com.nut2014.kotlintest.utils.UrlUtils
-import org.jetbrains.anko.toast
 
 class MainActivity : AppCompatActivity() {
 
@@ -14,9 +12,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        toast(UrlUtils.baseIP())
-        jumpHomeActivity()
-        finish()
+        Handler().postDelayed({
+            jumpHomeActivity()
+            finish()
+        }, 1000)
+
 
     }
 
