@@ -38,7 +38,9 @@ import java.io.File
 import java.io.FileOutputStream
 import java.net.URI
 
-
+/**
+ * 添加
+ */
 class AddCoverActivity : BaseActivity() {
     private var coverData: Cover? = null
 
