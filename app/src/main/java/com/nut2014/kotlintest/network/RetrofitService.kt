@@ -57,4 +57,7 @@ interface RetrofitService {
 
     @POST("user/updateUserInfo")
     fun updateUserInfo(@Body user: User): Observable<BaseResponse<String>>
+
+    @POST("cover/likeCover")
+    fun likeCover(@Query("id") coverId: Int): Observable<BaseResponse<Cover>>
 }

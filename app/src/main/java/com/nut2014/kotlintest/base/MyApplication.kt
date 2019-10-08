@@ -76,6 +76,7 @@ class MyApplication : Application(), Application.ActivityLifecycleCallbacks {
                 val original = chain.request()
                 //每个请求头加入token
                 val request = original.newBuilder()
+                    .header("userId", UserDataUtils.getId().toString())
                     .header("token", UserDataUtils.getToken())
                     .header("deviceId", deviceUuidFactory.deviceUuid.toString())
                     .method(original.method, original.body)

@@ -13,7 +13,9 @@ import com.jaeger.library.StatusBarUtil
 import com.nut2014.kotlintest.R
 import com.nut2014.kotlintest.base.BaseActivity
 import com.nut2014.kotlintest.base.CommonConfig
+import com.nut2014.kotlintest.base.MyApplication
 import com.nut2014.kotlintest.entity.Cover
+import com.nut2014.kotlintest.network.runRxLambda
 import com.nut2014.kotlintest.service.MusicService
 import com.nut2014.kotlintest.utils.GlideImageLoader
 import com.nut2014.kotlintest.utils.RotationAnim
@@ -44,11 +46,23 @@ class InfoActivity : BaseActivity() {
                 anim!!.animator.resume()
             } else {
                 anim!!.animator.pause()
-
             }
+        }
+        like_im.setOnClickListener {
+            likeAct()
         }
 
 
+    }
+
+    private fun likeAct() {
+        runRxLambda(MyApplication.application().getService().likeCover(coverData!!.id), {
+            if (it.code == 1) {
+                like_num_tv.text = it.data.likeNumber.toString()
+            }
+        }, {
+
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -74,7 +88,11 @@ class InfoActivity : BaseActivity() {
         setMusicInfo()
         anim = RotationAnim(cover_music_im)
         musicConnection = MusicConnection()
-        bindService(Intent(this, MusicService::class.java), musicConnection, Context.BIND_AUTO_CREATE)
+        bindService(
+            Intent(this, MusicService::class.java),
+            musicConnection,
+            Context.BIND_AUTO_CREATE
+        )
     }
 
     private inner class MusicConnection : ServiceConnection {
