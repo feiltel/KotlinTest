@@ -15,5 +15,6 @@ data class Cover(
     val musicName: String,
     val artistName: String,
     val musicCoverPath: String,
-    val tag_id: Int
+    val tag_id: Int,
+    val likeCover:Int
 ) : CommonConfig()

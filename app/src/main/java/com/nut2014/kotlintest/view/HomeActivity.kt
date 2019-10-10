@@ -64,10 +64,6 @@ class HomeActivity : AppCompatActivity(), CoverFragment.OnFragmentInteractionLis
         vp_collect.adapter = mAdapter
         vp_collect.offscreenPageLimit = 2
         tab_collect.setupWithViewPager(vp_collect)
-        top_iv.setOnClickListener{
-            startActivity(Intent(this@HomeActivity, TestActivity::class.java))
-        }
-
 
     }
 
@@ -78,7 +74,7 @@ class HomeActivity : AppCompatActivity(), CoverFragment.OnFragmentInteractionLis
 
     private fun getUserInfo() {
         val bgImg = UserDataUtils.getBgImg()
-        if(bgImg.isNotEmpty() ){
+        if (bgImg.isNotEmpty()) {
             Glide.with(this).load(bgImg).into(top_iv)
         }
         if (UserDataUtils.getId() > 0) {

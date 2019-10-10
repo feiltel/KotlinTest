@@ -31,20 +31,70 @@
 
         <LinearLayout
                 android:orientation="vertical"
-                android:layout_marginTop="16dp"
+
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-            <ImageView
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/ic_add_light_24dp"
-                    android:background="@android:color/darker_gray"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginTop="16dp"
-                    android:id="@+id/photo_iv"
-                    android:layout_width="120dp"
-                    android:layout_height="90dp"/>
+            <HorizontalScrollView
+                    android:scrollbarSize="1dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                <LinearLayout
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_width="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_height="wrap_content">
+
+                    <ImageView
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/ic_add_light_24dp"
+                            android:background="@android:color/darker_gray"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginBottom="16dp"
+                            android:id="@+id/photo_iv"
+                            android:layout_width="120dp"
+                            android:layout_height="90dp"/>
+
+                    <ImageView
+                            android:id="@+id/photo_iv2"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/ic_add_light_24dp"
+                            android:background="@android:color/darker_gray"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_width="120dp"
+                            android:layout_height="90dp"/>
+
+                    <ImageView
+                            android:id="@+id/photo_iv3"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/ic_add_light_24dp"
+                            android:background="@android:color/darker_gray"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_width="120dp"
+                            android:layout_height="90dp"/>
+
+                    <ImageView
+                            android:id="@+id/photo_iv4"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/ic_add_light_24dp"
+                            android:background="@android:color/darker_gray"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_width="120dp"
+                            android:layout_height="90dp"/>
+                </LinearLayout>
+
+            </HorizontalScrollView>
+
 
             <Button
                     android:layout_marginTop="16dp"
@@ -84,8 +134,6 @@
 
         </LinearLayout>
     </ScrollView>
-
-
 
 
 </LinearLayout>

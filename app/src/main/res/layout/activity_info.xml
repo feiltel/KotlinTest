@@ -174,7 +174,7 @@
             <ImageView
                     android:id="@+id/like_im"
                     android:padding="4dp"
-                    android:src="@drawable/ic_favorite_8dp"
+                    android:src="@drawable/ic_favorite_border_8dp"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintHorizontal_bias="1"

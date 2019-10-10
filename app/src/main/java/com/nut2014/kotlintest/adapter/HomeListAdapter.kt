@@ -20,7 +20,11 @@ class HomeListAdapter(layoutResId: Int, data: List<Cover>?) :
         holder.setText(R.id.tag_tv, orderInfo.tagName)
         holder.setText(R.id.username_tv, orderInfo.userName)
         holder.setText(R.id.like_tv, "${orderInfo.likeNumber}")
-        Glide.with(mContext).load(orderInfo.coverImgPath).into(holder.getView(R.id.cover_iv))
+        val split = orderInfo.coverImgPath.split(",")
+        if (split.isNotEmpty() && split[0].isNotEmpty()) {
+            Glide.with(mContext).load(split[0]).into(holder.getView(R.id.cover_iv))
+        }
+
         Glide.with(mContext).load(orderInfo.avatarPath).into(holder.getView(R.id.avatar_iv))
     }
 }

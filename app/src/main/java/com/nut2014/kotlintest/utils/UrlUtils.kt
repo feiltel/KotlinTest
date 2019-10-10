@@ -6,7 +6,7 @@ import com.nut2014.kotlintest.base.MyApplication
 object UrlUtils {
 
     private val REMOTE_IP = "http://123.206.39.150:8080/"
-    private val LOCAL_IP = "http://192.168.0.128:8080/"
+    private val LOCAL_IP = "http://192.168.31.196:8080/"
 
     private val channel: String?
         get() {

@@ -60,4 +60,7 @@ interface RetrofitService {
 
     @POST("cover/likeCover")
     fun likeCover(@Query("id") coverId: Int): Observable<BaseResponse<Cover>>
+
+    @POST("cover/getCoverInfo")
+    fun getCoverInfo(@Query("id") coverId: Int): Observable<BaseResponse<Cover>>
 }

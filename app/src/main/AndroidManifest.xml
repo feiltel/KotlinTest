@@ -66,10 +66,7 @@
                 android:name="com.linchaolong.android.imagepicker.cropper.CropImageActivity"
                 android:theme="@style/Base.Theme.AppCompat"/>
 
-        <service
-                android:name=".service.PlayerServices"
-                android:exported="true"
-                android:enabled="true"/>
+
 
         <service
                 android:name=".service.MusicService"

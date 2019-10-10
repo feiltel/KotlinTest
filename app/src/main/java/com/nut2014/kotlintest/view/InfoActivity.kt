@@ -57,8 +57,14 @@ class InfoActivity : BaseActivity() {
 
     private fun likeAct() {
         runRxLambda(MyApplication.application().getService().likeCover(coverData!!.id), {
+            println(it.data.likeCover)
             if (it.code == 1) {
                 like_num_tv.text = it.data.likeNumber.toString()
+                if (it.data.likeCover > 0) {
+                    like_im.setImageResource(R.drawable.ic_favorite_8dp)
+                } else {
+                    like_im.setImageResource(R.drawable.ic_favorite_border_8dp)
+                }
             }
         }, {
 
@@ -78,7 +84,7 @@ class InfoActivity : BaseActivity() {
         } else if (itemId == R.id.edit) {
             finish()
             val intent = Intent(this@InfoActivity, AddCoverActivity::class.java)
-            intent.putExtra("cover", coverData!!.toJson())
+            intent.putExtra("cover", coverData!!.id)
             startActivity(intent)
         }
         return super.onOptionsItemSelected(item)
@@ -102,14 +108,13 @@ class InfoActivity : BaseActivity() {
             musicControl!!.loadData(
                 coverData!!.coverMusicPath,
                 {
+                    //准备完成
                     it.start()
-
+                    anim!!.start()
                 },
                 { mp, percent ->
+                    //缓冲进度
                     progress_circular.setPercentage(percent * 1F)
-                    if (percent >= 99) {
-                        anim!!.start()
-                    }
                 })
 
         }
@@ -124,6 +129,20 @@ class InfoActivity : BaseActivity() {
     private fun getDataSet() {
         coverData = CommonConfig.fromJson(intent.getStringExtra("cover"), Cover::class.java)
         content_tv.text = coverData!!.coverDes
+
+        runRxLambda(MyApplication.application().getService().getCoverInfo(coverData!!.id), {
+            println(it.data.likeCover)
+            if (it.code == 1) {
+                like_num_tv.text = it.data.likeNumber.toString()
+                if (it.data.likeCover > 0) {
+                    like_im.setImageResource(R.drawable.ic_favorite_8dp)
+                } else {
+                    like_im.setImageResource(R.drawable.ic_favorite_border_8dp)
+                }
+            }
+        }, {
+
+        })
     }
 
     /**
@@ -132,9 +151,10 @@ class InfoActivity : BaseActivity() {
     private fun initBanner() {
         list_rv.setImageLoader(GlideImageLoader())
         val paths = ArrayList<String>()
-        paths.add(coverData!!.coverImgPath)
-        paths.add(coverData!!.coverImgPath)
-        paths.add(coverData!!.coverImgPath)
+        val split = coverData!!.coverImgPath.split(",")
+        split.forEach {
+            paths.add(it)
+        }
         list_rv!!.setImages(paths)
         list_rv.start()
     }

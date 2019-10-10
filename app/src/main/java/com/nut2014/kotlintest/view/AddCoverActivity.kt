@@ -21,7 +21,6 @@ import com.linchaolong.android.imagepicker.cropper.CropImage
 import com.linchaolong.android.imagepicker.cropper.CropImageView
 import com.nut2014.kotlintest.R
 import com.nut2014.kotlintest.base.BaseActivity
-import com.nut2014.kotlintest.base.CommonConfig
 import com.nut2014.kotlintest.base.MyApplication
 import com.nut2014.kotlintest.entity.Cover
 import com.nut2014.kotlintest.entity.MyTag
@@ -42,10 +41,12 @@ import java.net.URI
  * 添加
  */
 class AddCoverActivity : BaseActivity() {
-    private var coverData: Cover? = null
 
     private var imagePicker: ImagePicker? = null
-    private lateinit var uploadImgUrl: String
+    private var uploadImgUrl: String = ""
+    private var uploadImgUrl2: String = ""
+    private var uploadImgUrl3: String = ""
+    private var uploadImgUrl4: String = ""
     private lateinit var uploadMusicFileUrl: String
     private var uploadMusicName: String = ""
     private var uploadMusicArtist: String = ""
@@ -53,35 +54,36 @@ class AddCoverActivity : BaseActivity() {
     private var selectTagId: Int = 0
     private val musicFileRequestCode = 1000
 
+    private var coverId = 0
+
 
     private lateinit var tagList: List<MyTag>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_cover)
-
         StatusBarUtil.setColor(this, ContextCompat.getColor(this, R.color.colorPrimary), 0)
         setSupportActionBar(toolbar_tb)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        //判断是否是编辑
         if (intent.hasExtra("cover")) {
-            coverData = CommonConfig.fromJson(intent.getStringExtra("cover"), Cover::class.java)
-
-            uploadImgUrl = coverData!!.coverImgPath
-            uploadMusicFileUrl = coverData!!.coverMusicPath
-            content_et.setText(coverData!!.coverDes)
-            music_btn.setText(coverData!!.musicName)
-            uploadMusicName = coverData!!.musicName
-            uploadMusicArtist = coverData!!.artistName
-            uploadMusicCoverPath = coverData!!.musicCoverPath
-            selectTagId = coverData!!.tag_id
-
-            Glide.with(this@AddCoverActivity).load(uploadImgUrl).into(photo_iv)
+            coverId = intent.getIntExtra("cover", 0)
+            getCoverInfo(coverId)
         }
-
+        //图片点击
         photo_iv.setOnClickListener {
-            showPicSelect()
+            showPicSelect(1)
         }
 
-        getTagRequest()
+        photo_iv2.setOnClickListener {
+            showPicSelect(2)
+        }
+        photo_iv3.setOnClickListener {
+            showPicSelect(3)
+        }
+        photo_iv4.setOnClickListener {
+            showPicSelect(4)
+        }
+        //分类选择点击事件
         tag_sp!!.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 selectTagId = tagList[position].id
@@ -91,6 +93,7 @@ class AddCoverActivity : BaseActivity() {
 
             }
         }
+        //选择音乐按钮
         music_btn.setOnClickListener {
 
             LFilePicker()
@@ -102,6 +105,62 @@ class AddCoverActivity : BaseActivity() {
                 .withFileSize((5 * 1024).toLong())//指定文件大小为500K
                 .start()
         }
+    }
+
+    //编辑时恢复界面 数据
+    private fun setView(coverData: Cover) {
+        val split = coverData!!.coverImgPath.split(",")
+        if (split.isNotEmpty()) {
+            uploadImgUrl = split[0]
+            if (split.size > 1) {
+                uploadImgUrl2 = split[1]
+            }
+            if (split.size > 2) {
+                uploadImgUrl3 = split[2]
+            }
+            if (split.size > 3) {
+                uploadImgUrl4 = split[3]
+
+            }
+        }
+
+
+
+        uploadMusicFileUrl = coverData!!.coverMusicPath
+        content_et.setText(coverData!!.coverDes)
+        music_btn.setText(coverData!!.musicName)
+        uploadMusicName = coverData!!.musicName
+        uploadMusicArtist = coverData!!.artistName
+        uploadMusicCoverPath = coverData!!.musicCoverPath
+        selectTagId = coverData!!.tag_id
+        getTagRequest()
+
+
+        if (uploadImgUrl.isNotEmpty()) {
+            Glide.with(this@AddCoverActivity).load(uploadImgUrl).into(photo_iv)
+        }
+        if (uploadImgUrl2.isNotEmpty()) {
+            Glide.with(this@AddCoverActivity).load(uploadImgUrl2).into(photo_iv2)
+        }
+        if (uploadImgUrl3.isNotEmpty()) {
+            Glide.with(this@AddCoverActivity).load(uploadImgUrl3).into(photo_iv3)
+        }
+        if (uploadImgUrl4.isNotEmpty()) {
+            Glide.with(this@AddCoverActivity).load(uploadImgUrl4).into(photo_iv4)
+        }
+    }
+
+    //根据ID获取专辑数据
+    private fun getCoverInfo(id: Int) {
+        runRxLambda(MyApplication.application().getService().getCoverInfo(
+            id
+        ), {
+            if (it.code == 1) {
+                setView(it.data)
+            }
+        }, {
+
+        })
     }
 
     private fun getTagRequest() {
@@ -145,22 +204,23 @@ class AddCoverActivity : BaseActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    private fun getAllPicUrl(): String {
+        return "$uploadImgUrl,$uploadImgUrl2,$uploadImgUrl3,$uploadImgUrl4"
+    }
+
     private fun saveCover() {
         if (uploadImgUrl.isEmpty()) {
             toast("请先选择图片")
         }
         println(UserDataUtils.getId())
         println(uploadMusicFileUrl)
-        var coverId = 0
 
-        if (coverData != null && coverData!!.id > 0) {
-            coverId = coverData!!.id
-        }
+
         val cover =
             Cover(
                 coverId,
                 UserDataUtils.getId(),
-                uploadImgUrl,
+                getAllPicUrl(),
                 uploadMusicFileUrl,
                 content_et.text.toString(),
                 0,
@@ -170,7 +230,8 @@ class AddCoverActivity : BaseActivity() {
                 uploadMusicName,
                 uploadMusicArtist,
                 uploadMusicCoverPath,
-                selectTagId
+                selectTagId,
+                1
             )
         runRxLambda(MyApplication.application().getService().addCover(
             cover
@@ -186,7 +247,7 @@ class AddCoverActivity : BaseActivity() {
     }
 
 
-    private fun showPicSelect() {
+    private fun showPicSelect(picPos: Int) {
 
         imagePicker = ImagePicker()
         imagePicker!!.setCropImage(true)
@@ -199,7 +260,7 @@ class AddCoverActivity : BaseActivity() {
             override fun onCropImage(imageUri: Uri?) {
                 super.onCropImage(imageUri)
                 unloadPic(
-                    File(URI(imageUri.toString()))
+                    File(URI(imageUri.toString())), picPos
                 )
             }
 
@@ -221,14 +282,28 @@ class AddCoverActivity : BaseActivity() {
 
     }
 
-    private fun unloadPic(file: File) {
+    private fun unloadPic(file: File, picPos: Int) {
         runRxLambda(MyApplication.application().getService().uploadImage(
             ImageUtils.getPart(file),
             RequestBody.create("text/plain".toMediaTypeOrNull(), "image-type")
         ), {
             if (it.code == 1) {
-                Glide.with(this@AddCoverActivity).load(it.data).into(photo_iv)
-                uploadImgUrl = it.data
+
+
+                when (picPos) {
+                    1 -> Glide.with(this@AddCoverActivity).load(it.data).into(photo_iv)
+                    2 -> Glide.with(this@AddCoverActivity).load(it.data).into(photo_iv2)
+                    3 -> Glide.with(this@AddCoverActivity).load(it.data).into(photo_iv3)
+                    4 -> Glide.with(this@AddCoverActivity).load(it.data).into(photo_iv4)
+                }
+
+                when (picPos) {
+                    1 -> uploadImgUrl = it.data
+                    2 -> uploadImgUrl2 = it.data
+                    3 -> uploadImgUrl3 = it.data
+                    4 -> uploadImgUrl4 = it.data
+                }
+
             } else {
                 toast(it.msg)
             }
