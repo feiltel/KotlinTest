@@ -17,4 +17,9 @@
     <string name="user_center">用户中心</string>
     <string name="add_cover">添加</string>
     <string name="edit">编辑</string>
+    <string name="admin">admin</string>
+    <string name="default_password">123456</string>
+    <string name="repeat_password">重复密码</string>
+    <string name="user_Registered">用户注册</string>
+    <string name="registered">注册</string>
 </resources>

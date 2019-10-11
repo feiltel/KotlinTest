@@ -52,7 +52,9 @@ object UserDataUtils {
             return false
         }
     }
-
+    fun isLogin(): Boolean {
+        return getId() > 0 && getToken().isNotEmpty()
+    }
     fun jumpLogin(currentActivity: Activity) {
         currentActivity.startActivityForResult(
             Intent(currentActivity, LoginActivity::class.java),

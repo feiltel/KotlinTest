@@ -23,6 +23,11 @@ interface RetrofitService {
         @Query("userName") tel: String, @Query("passWord") passWord: String
     ): Observable<BaseResponse<User>>
 
+    @POST("registered")
+    fun registered(
+        @Query("userName") tel: String, @Query("passWord") passWord: String
+    ): Observable<BaseResponse<User>>
+
     @POST("cover/getUserPage")
     fun getUserPage(
         @Query("pageNum") pageNum: Int,@Query("userId") user_id: Int

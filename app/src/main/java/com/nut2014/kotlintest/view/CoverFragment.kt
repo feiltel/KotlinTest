@@ -59,8 +59,13 @@ class CoverFragment : Fragment() {
             if (coverList.isNotEmpty()) {
                 adapter.addData(coverList)
             }
+            getUserListData(pageInt)
+        }else{
+            if(UserDataUtils.isLogin()){
+                getUserListData(pageInt)
+            }
         }
-        getUserListData(pageInt)
+
     }
 
     /**
