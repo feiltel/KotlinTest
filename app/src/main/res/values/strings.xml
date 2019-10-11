@@ -22,4 +22,7 @@
     <string name="repeat_password">重复密码</string>
     <string name="user_Registered">用户注册</string>
     <string name="registered">注册</string>
+    <string name="share">分享</string>
+    <string name="at">\@</string>
+    <string name="setting">设置</string>
 </resources>

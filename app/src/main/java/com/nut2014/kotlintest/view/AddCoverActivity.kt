@@ -68,6 +68,8 @@ class AddCoverActivity : BaseActivity() {
         if (intent.hasExtra("cover")) {
             coverId = intent.getIntExtra("cover", 0)
             getCoverInfo(coverId)
+        } else {
+            getTagRequest()
         }
         //图片点击
         photo_iv.setOnClickListener {

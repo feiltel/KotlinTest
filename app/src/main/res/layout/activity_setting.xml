@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:background="@color/bg_gray"
         android:layout_height="match_parent"
-        tools:context=".view.UserActivity">
+        tools:context=".view.SettingActivity">
 
     <androidx.appcompat.widget.Toolbar
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
             app:layout_collapseMode="pin"
-            app:title="@string/user_center">
+            app:title="@string/setting">
 
 
     </androidx.appcompat.widget.Toolbar>
@@ -39,6 +39,7 @@
                 android:layout_height="wrap_content">
 
             <androidx.cardview.widget.CardView
+                    android:layout_margin="8dp"
                     app:cardElevation="2dp"
                     android:id="@+id/user_icon_cv"
                     android:layout_marginBottom="16dp"

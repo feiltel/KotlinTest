@@ -16,18 +16,18 @@ import com.nut2014.kotlintest.entity.User
 import com.nut2014.kotlintest.network.runRxLambda
 import com.nut2014.kotlintest.utils.ImageUtils
 import com.nut2014.kotlintest.utils.UserDataUtils
-import kotlinx.android.synthetic.main.activity_user.*
+import kotlinx.android.synthetic.main.activity_setting.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
 import org.jetbrains.anko.toast
 import java.io.File
 import java.net.URI
 
-class UserActivity : AppCompatActivity() {
+class SettingActivity : AppCompatActivity() {
     private var imagePicker: ImagePicker? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_user)
+        setContentView(R.layout.activity_setting)
 
         setSupportActionBar(toolbar_tb)
 
@@ -113,7 +113,7 @@ class UserActivity : AppCompatActivity() {
             if (it.code == 1) {
                 if (isUserIcon) {
                     updateUserInfo(isUserIcon, it.data)
-                    Glide.with(this@UserActivity).load(it.data).into(user_icon_iv)
+                    Glide.with(this@SettingActivity).load(it.data).into(user_icon_iv)
                 } else {
                     updateUserInfo(isUserIcon, it.data)
                 }

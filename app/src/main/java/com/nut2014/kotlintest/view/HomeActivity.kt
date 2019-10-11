@@ -44,9 +44,12 @@ class HomeActivity : AppCompatActivity(), CoverFragment.OnFragmentInteractionLis
         titleList = ArrayList()
         val myFragment1 = CoverFragment.newInstance(0)
         val myFragment2 = CoverFragment.newInstance(1)
+        val myFragment3 = CoverFragment.newInstance(1)
         bodyFragments!!.add(myFragment1)
         bodyFragments!!.add(myFragment2)
+        bodyFragments!!.add(myFragment3)
         titleList!!.add("广场")
+        titleList!!.add("关注")
         titleList!!.add("我的")
         val mAdapter = object : FragmentPagerAdapter(supportFragmentManager) {
             override fun getItem(position: Int): Fragment {
@@ -105,7 +108,7 @@ class HomeActivity : AppCompatActivity(), CoverFragment.OnFragmentInteractionLis
             onBackPressed()
         } else if (itemId == R.id.user) {
             if (UserDataUtils.isLoginAndJump(this)) {
-                startActivity(Intent(this@HomeActivity, UserActivity::class.java))
+                startActivity(Intent(this@HomeActivity, SettingActivity::class.java))
             }
 
         }

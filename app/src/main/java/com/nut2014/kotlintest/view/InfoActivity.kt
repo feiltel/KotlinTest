@@ -21,6 +21,7 @@ import com.nut2014.kotlintest.utils.GlideImageLoader
 import com.nut2014.kotlintest.utils.RotationAnim
 import com.nut2014.kotlintest.utils.UserDataUtils
 import kotlinx.android.synthetic.main.activity_info.*
+import org.jetbrains.anko.toast
 import java.util.*
 
 
@@ -86,6 +87,8 @@ class InfoActivity : BaseActivity() {
             val intent = Intent(this@InfoActivity, AddCoverActivity::class.java)
             intent.putExtra("cover", coverData!!.id)
             startActivity(intent)
+        }else if (itemId == R.id.share) {
+           toast(item.title)
         }
         return super.onOptionsItemSelected(item)
     }
@@ -134,6 +137,7 @@ class InfoActivity : BaseActivity() {
             println(it.data.likeCover)
             if (it.code == 1) {
                 like_num_tv.text = it.data.likeNumber.toString()
+                author_tv.text= "${getString(R.string.at)}${it.data.userName}"
                 if (it.data.likeCover > 0) {
                     like_im.setImageResource(R.drawable.ic_favorite_8dp)
                 } else {

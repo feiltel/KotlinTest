@@ -24,7 +24,7 @@
             tools:replace="label">
         <activity android:name=".view.TestActivity">
         </activity>
-        <activity android:name=".view.UserActivity">
+        <activity android:name=".view.SettingActivity">
         </activity>
         <activity android:name=".view.MainActivity" android:theme="@style/SplashTheme">
             <intent-filter>
