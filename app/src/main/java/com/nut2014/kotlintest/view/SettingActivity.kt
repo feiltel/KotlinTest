@@ -3,10 +3,10 @@ package com.nut2014.kotlintest.view
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import cn.refactor.lib.colordialog.PromptDialog
 import com.bumptech.glide.Glide
+import com.jaeger.library.StatusBarUtil
 import com.linchaolong.android.imagepicker.ImagePicker
 import com.linchaolong.android.imagepicker.cropper.CropImage
 import com.linchaolong.android.imagepicker.cropper.CropImageView
@@ -15,6 +15,7 @@ import com.nut2014.kotlintest.base.MyApplication
 import com.nut2014.kotlintest.entity.User
 import com.nut2014.kotlintest.network.runRxLambda
 import com.nut2014.kotlintest.utils.ImageUtils
+import com.nut2014.kotlintest.utils.UpdateUtils
 import com.nut2014.kotlintest.utils.UserDataUtils
 import kotlinx.android.synthetic.main.activity_setting.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -27,11 +28,10 @@ class SettingActivity : AppCompatActivity() {
     private var imagePicker: ImagePicker? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        StatusBarUtil.setTransparent(this)
         setContentView(R.layout.activity_setting)
 
-        setSupportActionBar(toolbar_tb)
 
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         Glide.with(this).load(UserDataUtils.getAvatarPath())
             .into(user_icon_iv)
 
@@ -39,11 +39,19 @@ class SettingActivity : AppCompatActivity() {
         out_login_cv.setOnClickListener {
             showOutDialog()
         }
-        user_icon_cv.setOnClickListener {
+        user_icon_iv.setOnClickListener {
             showPicSelect(true)
         }
         cover_bg_iv.setOnClickListener {
             showPicSelect(false)
+        }
+        Glide.with(this@SettingActivity).load(UserDataUtils.getBgImg()).into(cover_iv)
+
+        about_tv.setOnClickListener {
+            showAboutDialog()
+        }
+        check_update_tv.setOnClickListener {
+            UpdateUtils(this).checkVersion(true)
         }
     }
 
@@ -97,13 +105,6 @@ class SettingActivity : AppCompatActivity() {
 
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        val itemId = item!!.itemId
-        if (itemId == android.R.id.home) {
-            onBackPressed()
-        }
-        return super.onOptionsItemSelected(item)
-    }
 
     private fun unloadPic(file: File, isUserIcon: Boolean) {
         runRxLambda(MyApplication.application().getService().uploadImage(
@@ -115,6 +116,7 @@ class SettingActivity : AppCompatActivity() {
                     updateUserInfo(isUserIcon, it.data)
                     Glide.with(this@SettingActivity).load(it.data).into(user_icon_iv)
                 } else {
+                    Glide.with(this@SettingActivity).load(it.data).into(cover_iv)
                     updateUserInfo(isUserIcon, it.data)
                 }
 
@@ -148,6 +150,16 @@ class SettingActivity : AppCompatActivity() {
         })
     }
 
+    private fun showAboutDialog() {
+        PromptDialog(this)
+            .setDialogType(PromptDialog.DIALOG_TYPE_INFO)
+            .setAnimationEnable(true)
+            .setTitleText("关于瞬间")
+            .setContentText("关于瞬间关于瞬间关于瞬间关于瞬间关于瞬间关于瞬间关于瞬间关于瞬间关于瞬间关于瞬间关于瞬间关于瞬间关于瞬间关于瞬间关于瞬间关于瞬间关于瞬间")
+            .setPositiveListener("确定") { dialog ->
+                dialog.dismiss()
+            }.show()
+    }
 
     private fun showOutDialog() {
         PromptDialog(this)

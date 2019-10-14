@@ -154,6 +154,7 @@ class CoverFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == Constant.loginRequstCode && resultCode == 1) {
             onButtonPressed("")
+            getUserListData(pageInt)
         }
     }
 
@@ -163,7 +164,7 @@ class CoverFragment : Fragment() {
      */
     private fun init() {
         dataList = ArrayList()
-        adapter = HomeListAdapter(R.layout.list_item, dataList)
+        adapter = HomeListAdapter(R.layout.list_item, dataList,param1!! > 0)
     }
 
     override fun onDetach() {

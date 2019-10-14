@@ -47,7 +47,7 @@ class AddCoverActivity : BaseActivity() {
     private var uploadImgUrl2: String = ""
     private var uploadImgUrl3: String = ""
     private var uploadImgUrl4: String = ""
-    private lateinit var uploadMusicFileUrl: String
+    private var uploadMusicFileUrl: String = ""
     private var uploadMusicName: String = ""
     private var uploadMusicArtist: String = ""
     private var uploadMusicCoverPath: String = ""
@@ -67,6 +67,7 @@ class AddCoverActivity : BaseActivity() {
         //判断是否是编辑
         if (intent.hasExtra("cover")) {
             coverId = intent.getIntExtra("cover", 0)
+
             getCoverInfo(coverId)
         } else {
             getTagRequest()
@@ -211,11 +212,11 @@ class AddCoverActivity : BaseActivity() {
     }
 
     private fun saveCover() {
-        if (uploadImgUrl.isEmpty()) {
-            toast("请先选择图片")
+        if (content_et.text.toString().isEmpty()) {
+            toast("内容不能为空")
+            return
         }
         println(UserDataUtils.getId())
-        println(uploadMusicFileUrl)
 
 
         val cover =
@@ -239,6 +240,7 @@ class AddCoverActivity : BaseActivity() {
             cover
         ), {
             if (it.code == 1) {
+                setResult(1)
                 finish()
             }
             toast(it.msg)

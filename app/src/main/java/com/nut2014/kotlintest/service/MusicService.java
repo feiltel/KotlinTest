@@ -17,6 +17,7 @@ public class MusicService extends Service {
     private static final String TAG = "MusicService";
     private MediaPlayer player;
 
+
     @Override
     public IBinder onBind(Intent intent) {
         return new MusicBinder();
@@ -53,17 +54,23 @@ public class MusicService extends Service {
     public void onDestroy() {
         super.onDestroy();
         Log.d(TAG, "onDestroy");
-        if (player != null) {
-            player.stop();
-            player.reset();
-            player.release();
-        }
+        closeMedia(player);
     }
 
     @Override
     public boolean onUnbind(Intent intent) {
         Log.d(TAG, "onUnbind");
         return super.onUnbind(intent);
+    }
+
+    public void closeMedia(MediaPlayer mediaplayer) {
+        if (mediaplayer != null) {
+            if (mediaplayer.isPlaying()) {
+                mediaplayer.stop();
+            }
+            mediaplayer.release();
+        }
+
     }
 
     public MediaPlayer.OnBufferingUpdateListener updateListener;
@@ -87,14 +94,17 @@ public class MusicService extends Service {
             return player.isPlaying();
         }
 
-        public void changeStatue() {
-            if (player.isPlaying()) {
+        public void pause() {
+            if (player != null && player.isPlaying()) {
                 player.pause();
-            } else {
-                player.start();
             }
         }
 
+        public void start() {
+            if (player != null && !player.isPlaying()) {
+                player.start();
+            }
+        }
 
     }
 }

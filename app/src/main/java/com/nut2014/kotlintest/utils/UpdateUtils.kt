@@ -12,13 +12,17 @@ import java.io.File
 
 
 class UpdateUtils(private val context: Context) {
-    fun checkVersion() {
+    fun checkVersion(isManual: Boolean = false) {
         runRxLambda(
             MyApplication.application().getService().getVersion(), {
                 if (it.code == 1) {
                     val data = it.data
                     if (data.versionCode > AppUtils.getVersionCode(context)) {
                         showDialog(data)
+                    } else {
+                        if (isManual) {
+                            context.toast("未检测到新版本")
+                        }
                     }
                 }
             }, {

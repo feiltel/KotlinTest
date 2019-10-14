@@ -17,4 +17,6 @@ open class CommonConfig {
     fun toJson(): String {
         return Gson().toJson(this)
     }
+
+
 }

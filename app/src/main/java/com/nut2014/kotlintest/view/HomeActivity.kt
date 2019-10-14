@@ -46,10 +46,10 @@ class HomeActivity : AppCompatActivity(), CoverFragment.OnFragmentInteractionLis
         val myFragment2 = CoverFragment.newInstance(1)
         val myFragment3 = CoverFragment.newInstance(1)
         bodyFragments!!.add(myFragment1)
-        bodyFragments!!.add(myFragment2)
+        //bodyFragments!!.add(myFragment2)
         bodyFragments!!.add(myFragment3)
         titleList!!.add("广场")
-        titleList!!.add("关注")
+        //  titleList!!.add("关注")
         titleList!!.add("我的")
         val mAdapter = object : FragmentPagerAdapter(supportFragmentManager) {
             override fun getItem(position: Int): Fragment {
@@ -68,6 +68,14 @@ class HomeActivity : AppCompatActivity(), CoverFragment.OnFragmentInteractionLis
         vp_collect.offscreenPageLimit = 2
         tab_collect.setupWithViewPager(vp_collect)
 
+    }
+
+    override fun onBackPressed() {
+        //模拟HOME按键
+        val intent = Intent(Intent.ACTION_MAIN)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        intent.addCategory(Intent.CATEGORY_HOME)
+        startActivity(intent)
     }
 
     override fun onResume() {
