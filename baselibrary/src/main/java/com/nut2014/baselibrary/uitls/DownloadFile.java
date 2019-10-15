@@ -1,4 +1,4 @@
-package com.nut2014.kotlintest.utils;
+package com.nut2014.baselibrary.uitls;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -11,6 +11,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * 下载文件
@@ -26,7 +27,7 @@ public class DownloadFile extends AsyncTask<String, String, String> {
         this.canDownload = canDownload;
     }
 
-    private boolean canDownload = true;
+    private boolean canDownload;
     private Context context;
     private DownloadCallBack downloadCallBack;
 
@@ -87,7 +88,7 @@ public class DownloadFile extends AsyncTask<String, String, String> {
             // input stream to read file - with 8k buffer
             InputStream input = new BufferedInputStream(url.openStream(), 8192);
 
-            String timestamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
+            String timestamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss", Locale.CHINA).format(new Date());
 
             //Extract file name from URL
             String fileName = f_url[0].substring(f_url[0].lastIndexOf('/') + 1, f_url[0].length());

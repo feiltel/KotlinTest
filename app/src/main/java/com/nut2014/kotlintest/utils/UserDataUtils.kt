@@ -2,6 +2,7 @@ package com.nut2014.kotlintest.utils
 
 import android.app.Activity
 import android.content.Intent
+import com.nut2014.baselibrary.uitls.SpUtils
 import com.nut2014.kotlintest.base.MyApplication
 import com.nut2014.kotlintest.entity.User
 import com.nut2014.kotlintest.view.LoginActivity

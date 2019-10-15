@@ -3,10 +3,10 @@ package com.nut2014.kotlintest.base
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
+import com.nut2014.baselibrary.uitls.DeviceUuidFactory
 import com.nut2014.kotlintest.BuildConfig
 import com.nut2014.kotlintest.entity.BaseResponse
 import com.nut2014.kotlintest.network.RetrofitService
-import com.nut2014.kotlintest.utils.DeviceUuidFactory
 import com.nut2014.kotlintest.utils.UrlUtils
 import com.nut2014.kotlintest.utils.UserDataUtils
 import com.wanjian.cockroach.Cockroach

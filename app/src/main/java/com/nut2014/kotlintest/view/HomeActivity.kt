@@ -7,8 +7,8 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
-import com.bumptech.glide.Glide
 import com.jaeger.library.StatusBarUtil
+import com.nut2014.baselibrary.uitls.ImageUtils
 import com.nut2014.kotlintest.R
 import com.nut2014.kotlintest.base.MyApplication
 import com.nut2014.kotlintest.network.runRxLambda
@@ -43,7 +43,6 @@ class HomeActivity : AppCompatActivity(), CoverFragment.OnFragmentInteractionLis
         bodyFragments = ArrayList()
         titleList = ArrayList()
         val myFragment1 = CoverFragment.newInstance(0)
-        val myFragment2 = CoverFragment.newInstance(1)
         val myFragment3 = CoverFragment.newInstance(1)
         bodyFragments!!.add(myFragment1)
         //bodyFragments!!.add(myFragment2)
@@ -86,7 +85,7 @@ class HomeActivity : AppCompatActivity(), CoverFragment.OnFragmentInteractionLis
     private fun getUserInfo() {
         val bgImg = UserDataUtils.getBgImg()
         if (bgImg.isNotEmpty()) {
-            Glide.with(this).load(bgImg).into(top_iv)
+            ImageUtils.loadImg(this, bgImg, top_iv)
         }
         if (UserDataUtils.getId() > 0) {
             runRxLambda(MyApplication.application().getService().getUser(UserDataUtils.getId()), {
@@ -102,7 +101,7 @@ class HomeActivity : AppCompatActivity(), CoverFragment.OnFragmentInteractionLis
     }
 
     private fun setUserView() {
-        Glide.with(this).load(UserDataUtils.getBgImg()).into(top_iv)
+        ImageUtils.loadImg(this, UserDataUtils.getBgImg(), top_iv)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

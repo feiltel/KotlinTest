@@ -2,6 +2,7 @@ package com.nut2014.kotlintest.utils
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.nut2014.baselibrary.uitls.SpUtils
 import com.nut2014.kotlintest.base.MyApplication
 import com.nut2014.kotlintest.entity.Cover
 import java.util.*

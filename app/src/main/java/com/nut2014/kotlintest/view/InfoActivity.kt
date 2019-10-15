@@ -5,22 +5,24 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
-import android.os.Handler
 import android.os.IBinder
 import android.view.Menu
 import android.view.MenuItem
-import com.bumptech.glide.Glide
 import com.jaeger.library.StatusBarUtil
-import com.nut2014.kotlintest.BuildConfig
+import com.nut2014.baselibrary.anim.RotationAnim
+import com.nut2014.baselibrary.base.BaseActivity
+import com.nut2014.baselibrary.transformer.ZoomOutTransformer
+import com.nut2014.baselibrary.uitls.FileUtils
+import com.nut2014.baselibrary.uitls.ImageUtils
 import com.nut2014.kotlintest.R
-import com.nut2014.kotlintest.base.BaseActivity
 import com.nut2014.kotlintest.base.CommonConfig
 import com.nut2014.kotlintest.base.MyApplication
 import com.nut2014.kotlintest.entity.Cover
 import com.nut2014.kotlintest.network.runRxLambda
 import com.nut2014.kotlintest.service.MusicService
-import com.nut2014.kotlintest.transformer.ZoomOutTransformer
-import com.nut2014.kotlintest.utils.*
+import com.nut2014.kotlintest.utils.GlideImageLoader
+import com.nut2014.kotlintest.utils.ShareUtils
+import com.nut2014.kotlintest.utils.UserDataUtils
 import com.youth.banner.BannerConfig
 import kotlinx.android.synthetic.main.activity_info.*
 import kotlinx.coroutines.CoroutineStart
@@ -34,7 +36,7 @@ import java.util.*
 
 class InfoActivity : BaseActivity() {
     private var coverData: Cover? = null
-    private var musicConnection: MusicConnection? = null
+    private lateinit var musicConnection:MusicConnection
     private var musicControl: MusicService.MusicBinder? = null
     private var isReady: Boolean = false
 
@@ -47,7 +49,7 @@ class InfoActivity : BaseActivity() {
         toolbar_tb.title = ""
         setSupportActionBar(toolbar_tb)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        coverData = CommonConfig.fromJson(intent.getStringExtra("cover"), Cover::class.java)
+        coverData = CommonConfig.fromJson(intent.getStringExtra("cover")!!, Cover::class.java)
 
         getDataSet()
         initMusic()
@@ -76,7 +78,6 @@ class InfoActivity : BaseActivity() {
         })
     }
 
-    private val mHandler = Handler()
     private lateinit var saveFile: File
     private fun allShare() {
         root_coor.isDrawingCacheEnabled = true
@@ -84,26 +85,17 @@ class InfoActivity : BaseActivity() {
         val task = GlobalScope.launch(Unconfined, CoroutineStart.LAZY) {
             //调用s
             val bmp = root_coor.getDrawingCache() // 获取图片
-            saveFile = FileUtils.savePicture(bmp, "test.jpg")
+            saveFile = FileUtils.savePicture(bmp, FileUtils.rootPath + "/test/", "test.jpg")
             root_coor.destroyDrawingCache() // 保存过后释放资源
         }
-        task.start() //调用后先执行之前方法 然后执行子线程 最后在执行后面的方法
-        var shareIntent = Intent()
-        shareIntent.action = Intent.ACTION_SEND//设置分享行为
-        shareIntent.type = "text/plain"//设置分享内容的类型
-        shareIntent.putExtra(Intent.EXTRA_SUBJECT, "share")//添加分享内容标题
-        shareIntent.putExtra(Intent.EXTRA_TEXT, "share with you:" + "android")//添加分享内容
-
-
-        shareIntent.putExtra(
-            Intent.EXTRA_STREAM,
-            UriUtils.File2Uri(this, saveFile, BuildConfig.APPLICATION_ID + ".imagePicker.provider")
+        //调用后先执行之前方法 然后执行子线程 最后在执行后面的方法
+        task.start()
+        //分享
+        ShareUtils.share(
+            this, resources.getString(R.string.share), coverData!!.coverDes,
+            "${getString(R.string.at)}${coverData!!.userName}", saveFile
         )
-// 指定发送内容的类型 (MIME type)
-        shareIntent.type = "image/jpeg"
-        //创建分享的Dialog
-        shareIntent = Intent.createChooser(shareIntent, "share")
-        startActivity(shareIntent)
+
 
     }
 
@@ -153,7 +145,7 @@ class InfoActivity : BaseActivity() {
                         anim!!.start()
                         isReady = true
                     },
-                    { mp, percent ->
+                    { _, percent ->
                         //缓冲进度
                         progress_circular.setPercentage(percent * 1F)
                     })
@@ -171,7 +163,7 @@ class InfoActivity : BaseActivity() {
     private fun initView(coverData: Cover) {
         content_tv.text = coverData.coverDes
         like_num_tv.text = coverData.likeNumber.toString()
-        author_tv.text = "${getString(R.string.at)}${coverData.userName}"
+        author_tv.text = resources.getString(R.string.at) + coverData.userName
         initBanner(coverData.coverImgPath)
         setMusicInfo(coverData)
     }
@@ -222,7 +214,8 @@ class InfoActivity : BaseActivity() {
      * 设置歌手
      */
     private fun setMusicInfo(coverData: Cover) {
-        Glide.with(this).load(coverData.musicCoverPath).into(cover_music_im)
+
+        ImageUtils.loadCircleImg(this, coverData.musicCoverPath, cover_music_im)
         music_name_tv.text = coverData.musicName
         music_artist_tv.text = coverData.artistName
         like_num_tv.text = coverData.likeNumber.toString()

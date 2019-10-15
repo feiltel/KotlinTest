@@ -1,0 +1,83 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+android {
+    compileSdkVersion 29
+
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    api 'androidx.appcompat:appcompat:1.1.0'
+    api 'androidx.media:media:1.1.0'
+    api 'androidx.vectordrawable:vectordrawable-animated:1.1.0'
+    api 'androidx.exifinterface:exifinterface:1.1.0-rc01'
+    api 'androidx.recyclerview:recyclerview:1.1.0-beta05'
+    api 'androidx.constraintlayout:constraintlayout:2.0.0-beta2'
+    api 'androidx.cardview:cardview:1.0.0'
+    api 'androidx.legacy:legacy-support-v4:1.0.0'
+
+    api 'com.google.android.material:material:1.1.0-beta01'
+
+    /*--------------kotlin---------------*/
+    /* kotlin 组件库 Intents Dialogs and toasts Logging Resources and dimensions*/
+    api "org.jetbrains.anko:anko:0.10.8"
+    //kotlin协程
+    api 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.2'
+
+    api 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.50'
+    // retrofit 网络请求
+    api 'com.squareup.retrofit2:retrofit:2.6.1'
+    api 'com.squareup.retrofit2:converter-gson:2.6.2'
+    api 'com.squareup.retrofit2:adapter-rxjava2:2.6.2'
+    api 'com.squareup.okhttp3:logging-interceptor:4.2.2'
+    api 'io.reactivex.rxjava2:rxjava:2.0.1'
+    api 'io.reactivex.rxjava2:rxandroid:2.0.1'
+
+    //基础recyclerView适配器
+    api 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.30'
+
+    api 'com.liaoinstan.springview:library:1.5.1'
+
+    //图片加载
+    api 'com.github.bumptech.glide:glide:4.10.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
+
+    //图片选择器
+    api 'com.linchaolong.android:imagepicker:1.5'
+    //彩色对话框
+    api "com.github.andyxialm:ColorDialog:1.0.0"
+    //加载对话框
+    api "com.kaopiz:kprogresshud:1.2.0"
+    //滚动banner
+    api 'com.youth.banner:banner:1.4.10'  //banner
+
+    //透明状态栏
+    api 'com.jaeger.statusbarutil:library:1.5.1'
+
+    api 'com.leon:lfilepickerlibrary:1.8.0'
+
+
+}
+repositories {
+    mavenCentral()
+}

@@ -1,4 +1,4 @@
-package com.nut2014.kotlintest.utils;
+package com.nut2014.baselibrary.anim;
 
 import android.animation.ObjectAnimator;
 import android.view.View;

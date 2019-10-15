@@ -25,4 +25,12 @@
     <string name="share">分享</string>
     <string name="at">\@</string>
     <string name="setting">设置</string>
+    <string name="edit_main_bg">修改主页背景图</string>
+    <string name="check_update">检查更新</string>
+    <string name="out_login">退出登录</string>
+    <string name="edit_password">修改密码</string>
+    <string name="about">关于</string>
+    <string name="music_name">歌曲名称</string>
+    <string name="author">作者</string>
+    <string name="comment_img">评论</string>
 </resources>

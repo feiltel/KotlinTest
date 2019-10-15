@@ -3,6 +3,8 @@ package com.nut2014.kotlintest.utils
 import android.app.Activity
 import android.content.Context
 import cn.refactor.lib.colordialog.PromptDialog
+import com.nut2014.baselibrary.uitls.AppUtils
+import com.nut2014.baselibrary.uitls.DownloadFile
 import com.nut2014.kotlintest.BuildConfig
 import com.nut2014.kotlintest.base.MyApplication
 import com.nut2014.kotlintest.entity.AppVersion
@@ -43,24 +45,30 @@ class UpdateUtils(private val context: Context) {
     }
 
     private fun downloadFile(downloadPath: String) {
-        DownloadFile(context, object : DownloadFile.DownloadCallBack {
-            override fun success(path: String) {
-                context.toast(path)
-                val apkfile = File(path)
-                if (!apkfile.exists()) {
-                    return
+        DownloadFile(
+            context,
+            object : DownloadFile.DownloadCallBack {
+                override fun success(path: String) {
+                    context.toast(path)
+                    val apkfile = File(path)
+                    if (!apkfile.exists()) {
+                        return
+                    }
+                    AppUtils.installApk(
+                        context as Activity?,
+                        apkfile,
+                        BuildConfig.APPLICATION_ID + ".imagePicker.provider"
+                    )
                 }
-                AppUtils.installApk(context as Activity?, apkfile, BuildConfig.APPLICATION_ID + ".imagePicker.provider")
-            }
 
-            override fun error(msg: String) {
+                override fun error(msg: String) {
 
-            }
+                }
 
-            override fun progress(progress: Int) {
+                override fun progress(progress: Int) {
 
-            }
-        }).execute(downloadPath)
+                }
+            }).execute(downloadPath)
     }
 
 

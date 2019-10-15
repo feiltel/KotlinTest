@@ -1,4 +1,4 @@
-package com.nut2014.kotlintest.base;
+package com.nut2014.baselibrary.base;
 
 import androidx.appcompat.app.AppCompatActivity;
 

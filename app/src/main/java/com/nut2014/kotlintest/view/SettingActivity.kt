@@ -5,21 +5,19 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import cn.refactor.lib.colordialog.PromptDialog
-import com.bumptech.glide.Glide
 import com.jaeger.library.StatusBarUtil
 import com.linchaolong.android.imagepicker.ImagePicker
 import com.linchaolong.android.imagepicker.cropper.CropImage
 import com.linchaolong.android.imagepicker.cropper.CropImageView
+import com.nut2014.baselibrary.uitls.ImageUtils
 import com.nut2014.kotlintest.R
 import com.nut2014.kotlintest.base.MyApplication
 import com.nut2014.kotlintest.entity.User
+import com.nut2014.kotlintest.network.getUploadFileService
 import com.nut2014.kotlintest.network.runRxLambda
-import com.nut2014.kotlintest.utils.ImageUtils
 import com.nut2014.kotlintest.utils.UpdateUtils
 import com.nut2014.kotlintest.utils.UserDataUtils
 import kotlinx.android.synthetic.main.activity_setting.*
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody
 import org.jetbrains.anko.toast
 import java.io.File
 import java.net.URI
@@ -31,9 +29,8 @@ class SettingActivity : AppCompatActivity() {
         StatusBarUtil.setTransparent(this)
         setContentView(R.layout.activity_setting)
 
+        ImageUtils.loadCircleImg(this, UserDataUtils.getAvatarPath(), user_icon_iv)
 
-        Glide.with(this).load(UserDataUtils.getAvatarPath())
-            .into(user_icon_iv)
 
         user_name_tv.setText(UserDataUtils.getUserName())
         out_login_cv.setOnClickListener {
@@ -45,7 +42,7 @@ class SettingActivity : AppCompatActivity() {
         cover_bg_iv.setOnClickListener {
             showPicSelect(false)
         }
-        Glide.with(this@SettingActivity).load(UserDataUtils.getBgImg()).into(cover_iv)
+        ImageUtils.loadImg(this, UserDataUtils.getBgImg(), cover_iv)
 
         about_tv.setOnClickListener {
             showAboutDialog()
@@ -107,16 +104,14 @@ class SettingActivity : AppCompatActivity() {
 
 
     private fun unloadPic(file: File, isUserIcon: Boolean) {
-        runRxLambda(MyApplication.application().getService().uploadImage(
-            ImageUtils.getPart(file),
-            RequestBody.create("text/plain".toMediaTypeOrNull(), "image-type")
-        ), {
+        runRxLambda(getUploadFileService(file), {
             if (it.code == 1) {
                 if (isUserIcon) {
                     updateUserInfo(isUserIcon, it.data)
-                    Glide.with(this@SettingActivity).load(it.data).into(user_icon_iv)
+                    ImageUtils.loadCircleImg(this@SettingActivity, it.data, user_icon_iv)
                 } else {
-                    Glide.with(this@SettingActivity).load(it.data).into(cover_iv)
+
+                    ImageUtils.loadImg(this@SettingActivity, it.data, cover_iv)
                     updateUserInfo(isUserIcon, it.data)
                 }
 

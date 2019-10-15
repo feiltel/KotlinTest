@@ -5,11 +5,11 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'//Android 扩展 可以直接访问id对应的控件
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     defaultConfig {
         applicationId "com.nut2014.kotlintest"
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 13
         versionName "0.1.3"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -30,64 +30,10 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation kotlin_jdk
-    implementation androidx.appcompat
-    implementation 'androidx.media:media:1.1.0'
-    implementation 'androidx.vectordrawable:vectordrawable-animated:1.1.0'
-    implementation 'androidx.exifinterface:exifinterface:1.1.0-beta01'
-    implementation 'androidx.recyclerview:recyclerview:1.1.0-beta04'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta2'
-    implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'com.google.android.material:material:1.0.0'
-    /*test*/
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.13-beta-3'
     androidTestImplementation 'androidx.test:runner:1.3.0-alpha02'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0-alpha02'
-    /**
-     *
-     *   kotlin 组件库
-     *     Intents (wiki);
-     *     Dialogs and toasts (wiki);
-     *     Logging (wiki);
-     *     Resources and dimensions (wiki).
-     */
-
-    implementation "org.jetbrains.anko:anko:0.10.8"
-
-    // retrofit
-    implementation 'com.squareup.retrofit2:retrofit:2.6.1'
-    implementation 'com.squareup.retrofit2:converter-gson:2.6.1'
-    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.6.1'
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.1.1'
-    implementation 'io.reactivex.rxjava2:rxjava:2.0.1'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
-
-    //基础recyclerView适配器
-    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.30'
-
-    implementation 'com.liaoinstan.springview:library:1.5.1'
-
-    //图片加载
-    implementation 'com.github.bumptech.glide:glide:4.9.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
-
-    //图片选择器
-    implementation 'com.linchaolong.android:imagepicker:1.5'
-
-    implementation "com.github.andyxialm:ColorDialog:1.0.0"
-    implementation "com.kaopiz:kprogresshud:1.2.0"
-
-    implementation 'com.youth.banner:banner:1.4.10'  //banner
-
-    implementation 'co.lujun:androidtagview:1.1.7'//tagViewGroup
-
-    implementation 'com.jaeger.statusbarutil:library:1.5.1'
-
-    implementation 'com.leon:lfilepickerlibrary:1.8.0'
 
     implementation project(path: ':crashlib')
-
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.2'
+    implementation project(path: ':baselibrary')
 }

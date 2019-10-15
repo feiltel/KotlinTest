@@ -76,7 +76,7 @@ class CoverFragment : Fragment() {
         list_rv.adapter = adapter
         adapter.openLoadAnimation()
         list_rv.layoutManager = StaggeredGridLayoutManager(2, 1)
-        adapter.onItemClickListener = BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
+        adapter.onItemClickListener = BaseQuickAdapter.OnItemClickListener { _, _, position ->
             val intent = Intent(activity, InfoActivity::class.java)
             intent.putExtra("cover", dataList[position].toJson())
             startActivity(intent)
