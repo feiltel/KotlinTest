@@ -10,8 +10,6 @@
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
-
-
     <application
             android:name=".base.MyApplication"
             android:allowBackup="true"
@@ -22,11 +20,11 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:replace="label">
-        <activity android:name=".view.TestActivity">
-        </activity>
         <activity android:name=".view.SettingActivity">
         </activity>
-        <activity android:name=".view.MainActivity" android:theme="@style/SplashTheme">
+        <activity
+                android:name=".view.MainActivity"
+                android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <action android:name="android.intent.action.VIEW"/>
@@ -56,7 +54,6 @@
         <activity
                 android:name=".view.AddCoverActivity"
                 android:windowSoftInputMode="adjustResize">
-
         </activity>
         <activity
                 android:name=".view.LoginActivity"
@@ -66,12 +63,10 @@
                 android:name="com.linchaolong.android.imagepicker.cropper.CropImageActivity"
                 android:theme="@style/Base.Theme.AppCompat"/>
 
-
-
         <service
                 android:name=".service.MusicService"
-                android:exported="true"
-                android:enabled="true"/>
+                android:enabled="true"
+                android:exported="true"/>
     </application>
 
 </manifest>

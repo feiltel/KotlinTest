@@ -4,10 +4,13 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.graphics.Color
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.IBinder
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import com.jaeger.library.StatusBarUtil
 import com.nut2014.baselibrary.anim.RotationAnim
 import com.nut2014.baselibrary.base.BaseActivity
@@ -29,18 +32,17 @@ import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers.Unconfined
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import org.jetbrains.anko.toast
 import java.io.File
 import java.util.*
 
 
 class InfoActivity : BaseActivity() {
     private var coverData: Cover? = null
-    private lateinit var musicConnection:MusicConnection
+    private lateinit var musicConnection: MusicConnection
     private var musicControl: MusicService.MusicBinder? = null
     private var isReady: Boolean = false
 
-    private val INFO_JUMP_EDIT_REQUEST_CODE = 12
+    private val jumpEditRequestCode = 12
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,8 +60,6 @@ class InfoActivity : BaseActivity() {
         like_im.setOnClickListener {
             likeAct()
         }
-
-
     }
 
     private fun likeAct() {
@@ -78,13 +78,19 @@ class InfoActivity : BaseActivity() {
         })
     }
 
+    private fun setCancheView(view: View) {
+        view.isDrawingCacheEnabled = true
+        view.drawingCacheQuality = View.DRAWING_CACHE_QUALITY_HIGH
+        view.drawingCacheBackgroundColor = Color.WHITE
+        view.buildDrawingCache()
+    }
+
     private lateinit var saveFile: File
     private fun allShare() {
-        root_coor.isDrawingCacheEnabled = true
-        root_coor.buildDrawingCache()
+        setCancheView(root_coor)
         val task = GlobalScope.launch(Unconfined, CoroutineStart.LAZY) {
             //调用s
-            val bmp = root_coor.getDrawingCache() // 获取图片
+            val bmp = root_coor.drawingCache // 获取图片
             saveFile = FileUtils.savePicture(bmp, FileUtils.rootPath + "/test/", "test.jpg")
             root_coor.destroyDrawingCache() // 保存过后释放资源
         }
@@ -107,18 +113,20 @@ class InfoActivity : BaseActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        val itemId = item!!.itemId
-        if (itemId == android.R.id.home) {
-            onBackPressed()
-        } else if (itemId == R.id.edit) {
-            val intent = Intent(this@InfoActivity, AddCoverActivity::class.java)
-            intent.putExtra("cover", coverData!!.id)
-            startActivityForResult(intent, INFO_JUMP_EDIT_REQUEST_CODE)
-        } else if (itemId == R.id.share) {
-            toast(item.title)
-            allShare()
+        when (item!!.itemId) {
+            android.R.id.home -> onBackPressed()
+            R.id.edit -> {
+                jumpEdit(coverData!!)
+            }
+            R.id.share -> allShare()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun jumpEdit(coverData: Cover) {
+        val intent = Intent(this@InfoActivity, AddCoverActivity::class.java)
+        intent.putExtra("cover", coverData.id)
+        startActivityForResult(intent, jumpEditRequestCode)
     }
 
     private fun initMusic() {
@@ -138,17 +146,14 @@ class InfoActivity : BaseActivity() {
             musicControl = service as MusicService.MusicBinder
             if (coverData!!.coverMusicPath.isNotEmpty()) {
                 musicControl!!.loadData(
-                    coverData!!.coverMusicPath,
-                    {
-                        //准备完成
+                    coverData!!.coverMusicPath, MediaPlayer.OnPreparedListener {
                         it.start()
                         anim!!.start()
                         isReady = true
-                    },
-                    { _, percent ->
-                        //缓冲进度
-                        progress_circular.setPercentage(percent * 1F)
-                    })
+                    }, MediaPlayer.OnBufferingUpdateListener { _, i ->
+                        progress_circular.setPercentage(i * 1F)
+                    }
+                )
             }
 
 
@@ -245,7 +250,7 @@ class InfoActivity : BaseActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == INFO_JUMP_EDIT_REQUEST_CODE && resultCode == 1) {
+        if (requestCode == jumpEditRequestCode && resultCode == 1) {
             getDataSet()
         }
     }

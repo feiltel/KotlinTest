@@ -33,4 +33,6 @@
     <string name="music_name">歌曲名称</string>
     <string name="author">作者</string>
     <string name="comment_img">评论</string>
+    <string name="username_password_cannot_empty">用户名密码不能为空</string>
+    <string name="Iconsistent_password_entered_twice">两次输入的密码不一致</string>
 </resources>

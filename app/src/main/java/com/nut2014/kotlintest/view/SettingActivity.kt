@@ -32,7 +32,7 @@ class SettingActivity : AppCompatActivity() {
         ImageUtils.loadCircleImg(this, UserDataUtils.getAvatarPath(), user_icon_iv)
 
 
-        user_name_tv.setText(UserDataUtils.getUserName())
+        user_name_tv.text = UserDataUtils.getUserName()
         out_login_cv.setOnClickListener {
             showOutDialog()
         }

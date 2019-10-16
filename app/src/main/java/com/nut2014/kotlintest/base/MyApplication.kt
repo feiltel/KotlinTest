@@ -29,7 +29,7 @@ class MyApplication : Application(), Application.ActivityLifecycleCallbacks {
 
 
     private lateinit var retrofitService: RetrofitService
-    private lateinit var deviceUuidFactory: DeviceUuidFactory
+
 
     companion object {
         private lateinit var instance: MyApplication
@@ -41,7 +41,6 @@ class MyApplication : Application(), Application.ActivityLifecycleCallbacks {
 
     override fun onCreate() {
         super.onCreate()
-        deviceUuidFactory = DeviceUuidFactory(this)
         instance = this
         Cockroach.init(instance, null, null)
         initRetrofit()
@@ -57,7 +56,8 @@ class MyApplication : Application(), Application.ActivityLifecycleCallbacks {
      */
     private fun initRetrofit() {
         //配置网络请求超时时间
-        val build = OkHttpClient.Builder().connectTimeout(15, TimeUnit.SECONDS)
+        val build = OkHttpClient.Builder()
+            .connectTimeout(15, TimeUnit.SECONDS)
             .writeTimeout(15, TimeUnit.SECONDS)
             .readTimeout(15, TimeUnit.SECONDS)
 
@@ -78,7 +78,7 @@ class MyApplication : Application(), Application.ActivityLifecycleCallbacks {
                 val request = original.newBuilder()
                     .header("userId", UserDataUtils.getId().toString())
                     .header("token", UserDataUtils.getToken())
-                    .header("deviceId", deviceUuidFactory.deviceUuid.toString())
+                    .header("deviceId", DeviceUuidFactory.getDeviceUuid(instance).toString())
                     .method(original.method, original.body)
                     .build()
                 val response = chain.proceed(request)

@@ -24,13 +24,11 @@ public class AliHeader extends BaseHeader {
     private int logoSrc;
     private boolean isShowText;
 
-    private final int ROTATE_ANIM_DURATION = 180;
     private RotateAnimation mRotateUpAnim;
     private RotateAnimation mRotateDownAnim;
 
     private TextView headerTitle;
     private ImageView headerArrow;
-    private ImageView headerLogo;
     private ProgressBar headerProgressbar;
     private View frame;
 
@@ -57,6 +55,7 @@ public class AliHeader extends BaseHeader {
         this.logoSrc = logoSrc;
         this.isShowText = isShowText;
         mRotateUpAnim = new RotateAnimation(0.0f, -180.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        int ROTATE_ANIM_DURATION = 180;
         mRotateUpAnim.setDuration(ROTATE_ANIM_DURATION);
         mRotateUpAnim.setFillAfter(true);
         mRotateDownAnim = new RotateAnimation(-180.0f, 0.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
@@ -69,7 +68,7 @@ public class AliHeader extends BaseHeader {
         View view = inflater.inflate(R.layout.ali_header, viewGroup, true);
         headerTitle = view.findViewById(R.id.ali_header_text);
         headerArrow = view.findViewById(R.id.ali_header_arrow);
-        headerLogo = view.findViewById(R.id.ali_header_logo);
+        ImageView headerLogo = view.findViewById(R.id.ali_header_logo);
         headerProgressbar = view.findViewById(R.id.ali_header_progressbar);
         frame = view.findViewById(R.id.ali_frame);
         if (logoSrc != 0) headerLogo.setImageResource(logoSrc);

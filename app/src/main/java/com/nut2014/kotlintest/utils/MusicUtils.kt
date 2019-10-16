@@ -13,8 +13,7 @@ object MusicUtils {
         val mediaMetadataRetriever = MediaMetadataRetriever()
         mediaMetadataRetriever.setDataSource(path)
         val cover = mediaMetadataRetriever.embeddedPicture
-        val bitmap = BitmapFactory.decodeByteArray(cover, 0, cover.size)
-        return bitmap
+        return BitmapFactory.decodeByteArray(cover, 0, cover.size)
     }
 
     fun getCoverTitle(path: String): String {

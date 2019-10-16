@@ -7,8 +7,7 @@ import com.nut2014.kotlintest.R
 import com.nut2014.kotlintest.entity.Cover
 
 /**
- * 订单查询列表适配器
- * Created by admin on 2016/1/13.
+ * 列表适配器
  */
 class HomeListAdapter(layoutResId: Int, data: List<Cover>?, private var isUser: Boolean) :
     BaseQuickAdapter<Cover, BaseViewHolder>(layoutResId, data) {

@@ -12,7 +12,7 @@ import org.jetbrains.anko.toast
 
 class LoginActivity : AppCompatActivity() {
 
-    var isRegistered: Boolean = false
+    private var isRegistered: Boolean = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -60,12 +60,12 @@ class LoginActivity : AppCompatActivity() {
     private fun checkLogin(userName: String, passWord: String): Boolean {
 
         if (userName.isEmpty() || passWord.isEmpty()) {
-            toast("用户名密码不能为空")
+            toast(getString(R.string.username_password_cannot_empty))
             return false
         }
         if (isRegistered) {
             if (repeat_userpass_et.text.toString() != userpass_et.text.toString()) {
-                toast("两次输入的密码不一致")
+                toast(getString(R.string.Iconsistent_password_entered_twice))
                 return false
             }
         }

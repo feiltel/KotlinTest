@@ -130,7 +130,7 @@ class AddCoverActivity : BaseActivity() {
 
         uploadMusicFileUrl = coverData.coverMusicPath
         content_et.setText(coverData.coverDes)
-        music_btn.setText(coverData.musicName)
+        music_btn.text = coverData.musicName
         uploadMusicName = coverData.musicName
         uploadMusicArtist = coverData.artistName
         uploadMusicCoverPath = coverData.musicCoverPath
@@ -363,7 +363,7 @@ class AddCoverActivity : BaseActivity() {
             if (isActive) {
                 if (it.code == 1) {
                     uploadMusicFileUrl = it.data
-                    music_btn.setText(file.name)
+                    music_btn.text = file.name
                 } else {
                     toast(it.msg)
                 }

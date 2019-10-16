@@ -50,7 +50,7 @@ class HomeActivity : AppCompatActivity(), CoverFragment.OnFragmentInteractionLis
         titleList!!.add("广场")
         //  titleList!!.add("关注")
         titleList!!.add("我的")
-        val mAdapter = object : FragmentPagerAdapter(supportFragmentManager) {
+        val mAdapter = object : FragmentPagerAdapter(supportFragmentManager,0) {
             override fun getItem(position: Int): Fragment {
                 return bodyFragments!![position]
             }

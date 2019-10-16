@@ -9,7 +9,6 @@ import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import androidx.core.content.ContextCompat;
 
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.UUID;
@@ -23,7 +22,7 @@ public class DeviceUuidFactory {
     private static volatile UUID uuid;
 
     @SuppressLint({"MissingPermission", "HardwareIds"})
-    public DeviceUuidFactory(Context context) {
+    public static UUID getDeviceUuid(Context context) {
         if (uuid == null) {
             synchronized (DeviceUuidFactory.class) {
                 if (uuid == null) {
@@ -35,7 +34,7 @@ public class DeviceUuidFactory {
                         // prefs file
                         uuid = UUID.fromString(id);
                     } else {
-                      final String androidId = Settings.Secure.getString(
+                        final String androidId = Settings.Secure.getString(
                                 context.getContentResolver(), Settings.Secure.ANDROID_ID);
                         if (!"9774d56d682e549c".equals(androidId)) {
                             uuid = UUID.nameUUIDFromBytes(androidId
@@ -63,10 +62,8 @@ public class DeviceUuidFactory {
                 }
             }
         }
-    }
-
-
-    public UUID getDeviceUuid() {
         return uuid;
     }
+
+
 }

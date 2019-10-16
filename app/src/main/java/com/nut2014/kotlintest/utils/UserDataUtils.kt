@@ -27,9 +27,6 @@ object UserDataUtils {
         return SpUtils.getString(MyApplication.application(), "user", "name")
     }
 
-    fun getUserPass(): String {
-        return SpUtils.getString(MyApplication.application(), "user", "pass")
-    }
 
     fun getToken(): String {
         return SpUtils.getString(MyApplication.application(), "user", "token")
