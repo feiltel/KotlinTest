@@ -1,13 +1,12 @@
 package com.nut2014.kotlintest.view
 
-import android.content.Intent
+
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
+import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
-import com.jaeger.library.StatusBarUtil
+import androidx.navigation.fragment.findNavController
 import com.nut2014.baselibrary.uitls.ImageUtils
 import com.nut2014.kotlintest.R
 import com.nut2014.kotlintest.base.MyApplication
@@ -15,30 +14,35 @@ import com.nut2014.kotlintest.network.runRxLambda
 import com.nut2014.kotlintest.utils.PermissionUtils
 import com.nut2014.kotlintest.utils.UpdateUtils
 import com.nut2014.kotlintest.utils.UserDataUtils
-import kotlinx.android.synthetic.main.activity_home.*
+import kotlinx.android.synthetic.main.fragment_home.*
+
 import java.util.*
 
-/**
- * 列表功能示例
- */
-class HomeActivity : AppCompatActivity(), CoverFragment.OnFragmentInteractionListener {
-    override fun onFragmentInteraction(imgUrl: String) {
 
+class HomeFragment : Fragment() {
+
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        setHasOptionsMenu(true)
+
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
     private var bodyFragments: MutableList<Fragment>? = null
     private var titleList: MutableList<String>? = null
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        StatusBarUtil.setTransparent(this)
-        setContentView(R.layout.activity_home)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         toolbar_tb.title = "HOME"
-        setSupportActionBar(toolbar_tb)
+        (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar_tb)
         init()
         setView()
-        UpdateUtils(this).checkVersion()
-        PermissionUtils.checkAll(this)
+        UpdateUtils(requireContext()).checkVersion()
+        PermissionUtils.checkAll(requireActivity())
 
         bodyFragments = ArrayList()
         titleList = ArrayList()
@@ -50,7 +54,7 @@ class HomeActivity : AppCompatActivity(), CoverFragment.OnFragmentInteractionLis
         titleList!!.add("广场")
         //  titleList!!.add("关注")
         titleList!!.add("我的")
-        val mAdapter = object : FragmentPagerAdapter(supportFragmentManager,0) {
+        val mAdapter = object : FragmentPagerAdapter(childFragmentManager, 0) {
             override fun getItem(position: Int): Fragment {
                 return bodyFragments!![position]
             }
@@ -66,15 +70,6 @@ class HomeActivity : AppCompatActivity(), CoverFragment.OnFragmentInteractionLis
         vp_collect.adapter = mAdapter
         vp_collect.offscreenPageLimit = 2
         tab_collect.setupWithViewPager(vp_collect)
-
-    }
-
-    override fun onBackPressed() {
-        //模拟HOME按键
-        val intent = Intent(Intent.ACTION_MAIN)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        intent.addCategory(Intent.CATEGORY_HOME)
-        startActivity(intent)
     }
 
     override fun onResume() {
@@ -85,7 +80,7 @@ class HomeActivity : AppCompatActivity(), CoverFragment.OnFragmentInteractionLis
     private fun getUserInfo() {
         val bgImg = UserDataUtils.getBgImg()
         if (bgImg.isNotEmpty()) {
-            ImageUtils.loadImg(this, bgImg, top_iv)
+            ImageUtils.loadImg(requireContext(), bgImg, top_iv)
         }
         if (UserDataUtils.getId() > 0) {
             runRxLambda(MyApplication.application().getService().getUser(UserDataUtils.getId()), {
@@ -101,27 +96,8 @@ class HomeActivity : AppCompatActivity(), CoverFragment.OnFragmentInteractionLis
     }
 
     private fun setUserView() {
-        ImageUtils.loadImg(this, UserDataUtils.getBgImg(), top_iv)
+        ImageUtils.loadImg(requireContext(), UserDataUtils.getBgImg(), top_iv)
     }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.home_menu, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        val itemId = item!!.itemId
-        if (itemId == android.R.id.home) {
-            onBackPressed()
-        } else if (itemId == R.id.user) {
-            if (UserDataUtils.isLoginAndJump(this)) {
-                startActivity(Intent(this@HomeActivity, SettingActivity::class.java))
-            }
-
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
 
     /**
      * 初始化
@@ -135,8 +111,9 @@ class HomeActivity : AppCompatActivity(), CoverFragment.OnFragmentInteractionLis
      */
     private fun setView() {
         add_fab.setOnClickListener {
-            if (UserDataUtils.isLoginAndJump(this)) {
-                startActivity(Intent(this@HomeActivity, AddCoverActivity::class.java))
+
+            if (UserDataUtils.isLoginAndJump(requireActivity())) {
+                findNavController().navigate(R.id.action_homeFragment_to_addCoverFragment)
             }
         }
         toolbar_tb.setOnClickListener {
@@ -146,5 +123,22 @@ class HomeActivity : AppCompatActivity(), CoverFragment.OnFragmentInteractionLis
 
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val itemId = item!!.itemId
+        if (itemId == android.R.id.home) {
+            findNavController().navigateUp()
+        } else if (itemId == R.id.user) {
+            if (UserDataUtils.isLoginAndJump(requireActivity())) {
+                findNavController().navigate(R.id.action_homeFragment_to_settingFragment)
+            }
+
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.home_menu, menu)
+    }
 
 }

@@ -13,6 +13,7 @@
             android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.Toolbar
+                android:layout_marginTop="24dp"
                 app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:titleTextAppearance="@style/ToolBarTitleText"
                 android:id="@+id/toolbar_tb"

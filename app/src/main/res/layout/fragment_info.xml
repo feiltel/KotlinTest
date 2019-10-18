@@ -75,14 +75,14 @@
 
 
 
-                    <ImageView
-                            android:contentDescription="@string/cover_image"
-                            android:layout_margin="2dp"
-                            android:id="@+id/cover_music_im"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/ic_default"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"/>
+                <ImageView
+                        android:contentDescription="@string/cover_image"
+                        android:layout_margin="2dp"
+                        android:id="@+id/cover_music_im"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ic_default"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
 
 
 

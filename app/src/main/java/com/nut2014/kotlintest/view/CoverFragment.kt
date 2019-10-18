@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.liaoinstan.springview.widget.SpringView
@@ -27,6 +28,8 @@ private const val ARG_PARAM1 = "listType"
 
 
 class CoverFragment : Fragment() {
+
+
     private var pageInt: Int = 1
     private lateinit var adapter: HomeListAdapter
     private lateinit var dataList: ArrayList<Cover>
@@ -47,11 +50,13 @@ class CoverFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         return inflater.inflate(R.layout.fragment_cover, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        println("CoverFragment>>>onViewCreated")
         init()
         setView()
         if (param1 == 0) {
@@ -77,9 +82,12 @@ class CoverFragment : Fragment() {
         adapter.openLoadAnimation()
         list_rv.layoutManager = StaggeredGridLayoutManager(2, 1)
         adapter.onItemClickListener = BaseQuickAdapter.OnItemClickListener { _, _, position ->
-            val intent = Intent(activity, InfoActivity::class.java)
+          /*  val intent = Intent(activity, InfoActivity::class.java)
             intent.putExtra("cover", dataList[position].toJson())
-            startActivity(intent)
+            startActivity(intent)*/
+            val args = Bundle()
+            args.putString("cover", dataList[position].toJson())
+            findNavController().navigate(R.id.action_homeFragment_to_infoFragment,args)
         }
         adapter.setOnLoadMoreListener({
             getUserListData(pageInt)
@@ -143,11 +151,11 @@ class CoverFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
+     /*   if (context is OnFragmentInteractionListener) {
             listener = context
         } else {
             throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
-        }
+        }*/
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

@@ -1,11 +1,15 @@
 package com.nut2014.kotlintest.view
 
+
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import cn.refactor.lib.colordialog.PromptDialog
-import com.jaeger.library.StatusBarUtil
 import com.linchaolong.android.imagepicker.ImagePicker
 import com.linchaolong.android.imagepicker.cropper.CropImage
 import com.linchaolong.android.imagepicker.cropper.CropImageView
@@ -17,19 +21,27 @@ import com.nut2014.kotlintest.network.getUploadFileService
 import com.nut2014.kotlintest.network.runRxLambda
 import com.nut2014.kotlintest.utils.UpdateUtils
 import com.nut2014.kotlintest.utils.UserDataUtils
-import kotlinx.android.synthetic.main.activity_setting.*
-import org.jetbrains.anko.toast
+import kotlinx.android.synthetic.main.fragment_setting.*
+import org.jetbrains.anko.support.v4.toast
 import java.io.File
 import java.net.URI
 
-class SettingActivity : AppCompatActivity() {
-    private var imagePicker: ImagePicker? = null
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        StatusBarUtil.setTransparent(this)
-        setContentView(R.layout.activity_setting)
 
-        ImageUtils.loadCircleImg(this, UserDataUtils.getAvatarPath(), user_icon_iv)
+class SettingFragment : Fragment() {
+    private var imagePicker: ImagePicker? = null
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_setting, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+
+        ImageUtils.loadCircleImg(requireContext(), UserDataUtils.getAvatarPath(), user_icon_iv)
 
 
         user_name_tv.text = UserDataUtils.getUserName()
@@ -42,15 +54,16 @@ class SettingActivity : AppCompatActivity() {
         cover_bg_iv.setOnClickListener {
             showPicSelect(false)
         }
-        ImageUtils.loadImg(this, UserDataUtils.getBgImg(), cover_iv)
+        ImageUtils.loadImg(requireContext(), UserDataUtils.getBgImg(), cover_iv)
 
         about_tv.setOnClickListener {
             showAboutDialog()
         }
         check_update_tv.setOnClickListener {
-            UpdateUtils(this).checkVersion(true)
+            UpdateUtils(requireContext()).checkVersion(true)
         }
     }
+
 
     private fun showPicSelect(isUserIcon: Boolean) {
 
@@ -108,10 +121,10 @@ class SettingActivity : AppCompatActivity() {
             if (it.code == 1) {
                 if (isUserIcon) {
                     updateUserInfo(isUserIcon, it.data)
-                    ImageUtils.loadCircleImg(this@SettingActivity, it.data, user_icon_iv)
+                    ImageUtils.loadCircleImg(requireContext(), it.data, user_icon_iv)
                 } else {
 
-                    ImageUtils.loadImg(this@SettingActivity, it.data, cover_iv)
+                    ImageUtils.loadImg(requireContext(), it.data, cover_iv)
                     updateUserInfo(isUserIcon, it.data)
                 }
 
@@ -132,21 +145,22 @@ class SettingActivity : AppCompatActivity() {
         if (isUserIcon) {
             user = User("", "", "", UserDataUtils.getId(), "", "", imgUrl)
         }
-        runRxLambda(MyApplication.application().getService().updateUserInfo(
-            user
-        ), {
-            toast(it.msg)
+        runRxLambda(
+            MyApplication.application().getService().updateUserInfo(
+                user
+            ), {
+                toast(it.msg)
 
-        }, {
+            }, {
 
-            it?.printStackTrace()
+                it?.printStackTrace()
 
 
-        })
+            })
     }
 
     private fun showAboutDialog() {
-        PromptDialog(this)
+        PromptDialog(requireContext())
             .setDialogType(PromptDialog.DIALOG_TYPE_INFO)
             .setAnimationEnable(true)
             .setTitleText("关于瞬间")
@@ -157,7 +171,7 @@ class SettingActivity : AppCompatActivity() {
     }
 
     private fun showOutDialog() {
-        PromptDialog(this)
+        PromptDialog(requireContext())
             .setDialogType(PromptDialog.DIALOG_TYPE_WARNING)
             .setAnimationEnable(true)
             .setTitleText("退出登录")
@@ -183,7 +197,7 @@ class SettingActivity : AppCompatActivity() {
                 if (it.code == 1) {
                     UserDataUtils.saveUser(User("", "", "", 0, "", "", ""))
                     toast(it.msg)
-                    finish()
+                    findNavController().navigateUp()
                 }
             }, {
                 toast(it?.message.toString())

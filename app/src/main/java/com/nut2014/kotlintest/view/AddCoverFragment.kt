@@ -6,14 +6,12 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import androidx.core.content.ContextCompat
-import com.jaeger.library.StatusBarUtil
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.leon.lfilepickerlibrary.LFilePicker
 import com.linchaolong.android.imagepicker.ImagePicker
 import com.linchaolong.android.imagepicker.cropper.CropImage
@@ -29,18 +27,16 @@ import com.nut2014.kotlintest.network.getUploadFileService
 import com.nut2014.kotlintest.network.runRxLambda
 import com.nut2014.kotlintest.utils.MusicUtils
 import com.nut2014.kotlintest.utils.UserDataUtils
-import kotlinx.android.synthetic.main.activity_add_cover.*
-import org.jetbrains.anko.toast
+import kotlinx.android.synthetic.main.fragment_add_cover.*
+
+import org.jetbrains.anko.support.v4.toast
 import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.net.URI
 
-/**
- * 添加
- */
-class AddCoverActivity : BaseActivity() {
 
+class AddCoverFragment : Fragment() {
     private var imagePicker: ImagePicker? = null
     private var uploadImgUrl: String = ""
     private var uploadImgUrl2: String = ""
@@ -57,16 +53,22 @@ class AddCoverActivity : BaseActivity() {
 
 
     private lateinit var tagList: List<MyTag>
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_cover)
-        StatusBarUtil.setColor(this, ContextCompat.getColor(this, R.color.colorPrimary), 0)
-        setSupportActionBar(toolbar_tb)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        //判断是否是编辑
-        if (intent.hasExtra("cover")) {
-            coverId = intent.getIntExtra("cover", 0)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        setHasOptionsMenu(true)
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_add_cover, container, false)
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar_tb)
+        (requireActivity() as AppCompatActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        //判断是否是编辑
+        val coverId = arguments?.getInt("cover", 0)
+        if (coverId != null && coverId > 0) {
             getCoverInfo(coverId)
         } else {
             getTagRequest()
@@ -99,7 +101,7 @@ class AddCoverActivity : BaseActivity() {
         music_btn.setOnClickListener {
 
             LFilePicker()
-                .withActivity(this)
+                .withActivity(requireActivity())
                 .withMutilyMode(false)//单选模式
                 .withRequestCode(musicFileRequestCode)
                 .withStartPath("/storage/emulated/0/netease/cloudmusic/Music/")//指定初始显示路径
@@ -137,66 +139,70 @@ class AddCoverActivity : BaseActivity() {
         selectTagId = coverData.tag_id
         getTagRequest()
 
-        ImageUtils.loadImg(this@AddCoverActivity, uploadImgUrl, photo_iv)
-        ImageUtils.loadImg(this@AddCoverActivity, uploadImgUrl2, photo_iv2)
-        ImageUtils.loadImg(this@AddCoverActivity, uploadImgUrl3, photo_iv3)
-        ImageUtils.loadImg(this@AddCoverActivity, uploadImgUrl4, photo_iv4)
+        ImageUtils.loadImg(requireContext(), uploadImgUrl, photo_iv)
+        ImageUtils.loadImg(requireContext(), uploadImgUrl2, photo_iv2)
+        ImageUtils.loadImg(requireContext(), uploadImgUrl3, photo_iv3)
+        ImageUtils.loadImg(requireContext(), uploadImgUrl4, photo_iv4)
 
     }
 
     //根据ID获取专辑数据
     private fun getCoverInfo(id: Int) {
-        runRxLambda(MyApplication.application().getService().getCoverInfo(
-            id
-        ), {
-            if (it.code == 1) {
-                setView(it.data)
-            }
-        }, {
+        runRxLambda(
+            MyApplication.application().getService().getCoverInfo(
+                id
+            ), {
+                if (it.code == 1) {
+                    setView(it.data)
+                }
+            }, {
 
-        })
+            })
     }
 
     private fun getTagRequest() {
-        runRxLambda(MyApplication.application().getService().getAllTag(
-        ), {
-            val dataList = mutableListOf<String>()
-            var selectPos = 0
-            if (it.code == 1) {
-                tagList = it.data
-                tagList.forEachIndexed { index, myTag ->
-                    dataList.add(myTag.name)
-                    if (selectTagId > 0 && selectTagId == myTag.id) {
-                        selectPos = index
+        runRxLambda(
+            MyApplication.application().getService().getAllTag(
+            ), {
+                val dataList = mutableListOf<String>()
+                var selectPos = 0
+                if (it.code == 1) {
+                    tagList = it.data
+                    tagList.forEachIndexed { index, myTag ->
+                        dataList.add(myTag.name)
+                        if (selectTagId > 0 && selectTagId == myTag.id) {
+                            selectPos = index
+                        }
                     }
+
                 }
-
-            }
-            val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, dataList)
-            tag_sp.adapter = arrayAdapter
-            if (selectPos > 0) {
-                tag_sp.setSelection(selectPos)
-            }
-        }, {
-            toast(it?.message.toString())
-            it?.printStackTrace()
-        })
+                val arrayAdapter =
+                    ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, dataList)
+                tag_sp.adapter = arrayAdapter
+                if (selectPos > 0) {
+                    tag_sp.setSelection(selectPos)
+                }
+            }, {
+                toast(it?.message.toString())
+                it?.printStackTrace()
+            })
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.add_menu, menu)
-        return super.onCreateOptionsMenu(menu)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.add_menu, menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
         val itemId = item!!.itemId
         if (itemId == android.R.id.home) {
-            onBackPressed()
+            findNavController().navigateUp()
         } else if (itemId == R.id.save_btn) {
             saveCover()
         }
         return super.onOptionsItemSelected(item)
     }
+
 
     private fun getAllPicUrl(): String {
         return "$uploadImgUrl,$uploadImgUrl2,$uploadImgUrl3,$uploadImgUrl4"
@@ -227,18 +233,19 @@ class AddCoverActivity : BaseActivity() {
                 selectTagId,
                 1
             )
-        runRxLambda(MyApplication.application().getService().addCover(
-            cover
-        ), {
-            if (it.code == 1) {
-                setResult(1)
-                finish()
-            }
-            toast(it.msg)
-        }, {
-            toast(it?.message.toString())
-            it?.printStackTrace()
-        })
+        runRxLambda(
+            MyApplication.application().getService().addCover(
+                cover
+            ), {
+                if (it.code == 1) {
+                    // setResult(1)
+                    //   finish()
+                }
+                toast(it.msg)
+            }, {
+                toast(it?.message.toString())
+                it?.printStackTrace()
+            })
     }
 
 
@@ -280,13 +287,13 @@ class AddCoverActivity : BaseActivity() {
     private fun unloadPic(file: File, picPos: Int) {
         runRxLambda(getUploadFileService(file), {
             if (it.code == 1) {
-                ImageUtils.loadImg(this@AddCoverActivity, it.data, photo_iv)
+                ImageUtils.loadImg(requireContext(), it.data, photo_iv)
 
                 when (picPos) {
-                    1 -> ImageUtils.loadImg(this@AddCoverActivity, it.data, photo_iv)
-                    2 -> ImageUtils.loadImg(this@AddCoverActivity, it.data, photo_iv2)
-                    3 -> ImageUtils.loadImg(this@AddCoverActivity, it.data, photo_iv3)
-                    4 -> ImageUtils.loadImg(this@AddCoverActivity, it.data, photo_iv4)
+                    1 -> ImageUtils.loadImg(requireContext(), it.data, photo_iv)
+                    2 -> ImageUtils.loadImg(requireContext(), it.data, photo_iv2)
+                    3 -> ImageUtils.loadImg(requireContext(), it.data, photo_iv3)
+                    4 -> ImageUtils.loadImg(requireContext(), it.data, photo_iv4)
                 }
 
                 when (picPos) {
@@ -335,7 +342,7 @@ class AddCoverActivity : BaseActivity() {
         bos.flush()
         bos.close()
         runRxLambda(getUploadFileService(coverFile), {
-            if (isActive) {
+            if (BaseActivity.isActive) {
                 if (it.code == 1) {
                     uploadMusicCoverPath = it.data
                 } else {
@@ -360,7 +367,7 @@ class AddCoverActivity : BaseActivity() {
 
 
         runRxLambda(getUploadFileService(file), {
-            if (isActive) {
+            if (BaseActivity.isActive) {
                 if (it.code == 1) {
                     uploadMusicFileUrl = it.data
                     music_btn.text = file.name
@@ -376,5 +383,4 @@ class AddCoverActivity : BaseActivity() {
 
         })
     }
-
 }
