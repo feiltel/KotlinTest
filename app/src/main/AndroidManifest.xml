@@ -20,9 +20,13 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:replace="label">
+        <receiver
+                android:name=".broadcast.MyReceiver"
+                android:enabled="true"
+                android:exported="true">
+        </receiver>
 
-        <activity
-                android:name=".view.MainActivity">
+        <activity android:name=".view.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <action android:name="android.intent.action.VIEW"/>
@@ -30,7 +34,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
 
         <meta-data
                 android:name="BUILD_CHANNEL"
@@ -47,11 +50,6 @@
                     android:resource="@xml/file_paths"
                     tools:replace="android:resource"/>
         </provider>
-
-
-        <activity
-                android:name=".view.LoginActivity"
-                android:theme="@style/MyDialogStyle"/>
 
         <activity
                 android:name="com.linchaolong.android.imagepicker.cropper.CropImageActivity"

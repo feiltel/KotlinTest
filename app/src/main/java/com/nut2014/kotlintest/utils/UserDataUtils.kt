@@ -1,11 +1,11 @@
 package com.nut2014.kotlintest.utils
 
-import android.app.Activity
-import android.content.Intent
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
 import com.nut2014.baselibrary.uitls.SpUtils
 import com.nut2014.kotlintest.base.MyApplication
 import com.nut2014.kotlintest.entity.User
-import com.nut2014.kotlintest.view.LoginActivity
+import com.nut2014.kotlintest.view.LoginDialog
 import org.jetbrains.anko.toast
 
 object UserDataUtils {
@@ -40,24 +40,27 @@ object UserDataUtils {
         return SpUtils.getString(MyApplication.application(), "user", "userIcon")
     }
 
-    fun isLoginAndJump(context: Activity): Boolean {
+    fun isLoginAndJump(context: FragmentActivity): Boolean {
 
         if (getId() > 0 && getToken().isNotEmpty()) {
             return true
         } else {
             context.toast("请先登录")
-            context.startActivityForResult(Intent(context, LoginActivity::class.java), Constant.loginRequstCode)
+            LoginDialog().show(context.supportFragmentManager, "")
             return false
         }
     }
+
     fun isLogin(): Boolean {
         return getId() > 0 && getToken().isNotEmpty()
     }
-    fun jumpLogin(currentActivity: Activity) {
-        currentActivity.startActivityForResult(
-            Intent(currentActivity, LoginActivity::class.java),
-            Constant.loginRequstCode
-        )
+
+    fun jumpLogin(currentActivity: AppCompatActivity) {
+        LoginDialog().show(currentActivity.supportFragmentManager, "")
+        /*  currentActivity.startActivityForResult(
+              Intent(currentActivity, LoginActivity::class.java),
+              Constant.loginRequstCode
+          )*/
     }
 
 }

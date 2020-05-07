@@ -68,4 +68,7 @@ interface RetrofitService {
 
     @POST("cover/getCoverInfo")
     fun getCoverInfo(@Query("id") coverId: Int): Observable<BaseResponse<Cover>>
+
+
+    //保险
 }

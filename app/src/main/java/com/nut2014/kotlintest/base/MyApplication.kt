@@ -3,7 +3,9 @@ package com.nut2014.kotlintest.base
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.nut2014.baselibrary.uitls.DeviceUuidFactory
+import com.nut2014.eventbuslib.FunctionManager
 import com.nut2014.kotlintest.BuildConfig
 import com.nut2014.kotlintest.entity.BaseResponse
 import com.nut2014.kotlintest.network.RetrofitService
@@ -45,6 +47,12 @@ class MyApplication : Application(), Application.ActivityLifecycleCallbacks {
         Cockroach.init(instance, null, null)
         initRetrofit()
         registerActivityLifecycleCallbacks(this)
+
+    }
+
+    override fun onTerminate() {
+        super.onTerminate()
+        FunctionManager.getInstance().removeAll()
     }
 
     fun getService(): RetrofitService {
@@ -119,13 +127,14 @@ class MyApplication : Application(), Application.ActivityLifecycleCallbacks {
         }
     }
 
-    lateinit var currentActivity: Activity
+
+    lateinit var currentActivity: AppCompatActivity
     override fun onActivityPaused(activity: Activity?) {
 
     }
 
     override fun onActivityResumed(activity: Activity?) {
-        currentActivity = activity!!
+        currentActivity = (activity as AppCompatActivity?)!!
     }
 
     override fun onActivityStarted(activity: Activity?) {

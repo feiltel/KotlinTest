@@ -120,6 +120,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"/>
 
+            <EditText
+                    android:id="@+id/title_et"
+                    android:hint="标题"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
 
             <EditText
 

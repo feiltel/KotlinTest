@@ -36,7 +36,7 @@ import java.io.File
 import java.util.*
 
 
-class InfoFragment : Fragment() {
+class InfoFragment : BaseFragment() {
     private var coverData: Cover? = null
     private lateinit var musicConnection: MusicConnection
     private var musicControl: MusicService.MusicBinder? = null
@@ -183,7 +183,7 @@ class InfoFragment : Fragment() {
 
     private fun getDataSet() {
 
-        runRxLambda(MyApplication.application().getService().getCoverInfo(1), {
+        runRxLambda(MyApplication.application().getService().getCoverInfo(coverData!!.id), {
             println(it.data.likeCover)
             if (it.code == 1) {
                 val data = it.data

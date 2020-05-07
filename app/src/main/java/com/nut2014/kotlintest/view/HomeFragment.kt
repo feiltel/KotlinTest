@@ -8,26 +8,25 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.navigation.fragment.findNavController
 import com.nut2014.baselibrary.uitls.ImageUtils
+import com.nut2014.eventbuslib.FunctionManager
 import com.nut2014.kotlintest.R
 import com.nut2014.kotlintest.base.MyApplication
 import com.nut2014.kotlintest.network.runRxLambda
 import com.nut2014.kotlintest.utils.PermissionUtils
-import com.nut2014.kotlintest.utils.UpdateUtils
 import com.nut2014.kotlintest.utils.UserDataUtils
 import kotlinx.android.synthetic.main.fragment_home.*
-
 import java.util.*
+import com.nut2014.eventbuslib.FunctionNoParamNoResult as FunctionNoParamNoResult1
 
 
-class HomeFragment : Fragment() {
+class HomeFragment : BaseFragment() {
 
-
+    private var isInit = false
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         setHasOptionsMenu(true)
-
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
@@ -41,7 +40,7 @@ class HomeFragment : Fragment() {
         (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar_tb)
         init()
         setView()
-        UpdateUtils(requireContext()).checkVersion()
+
         PermissionUtils.checkAll(requireActivity())
 
         bodyFragments = ArrayList()
@@ -70,12 +69,21 @@ class HomeFragment : Fragment() {
         vp_collect.adapter = mAdapter
         vp_collect.offscreenPageLimit = 2
         tab_collect.setupWithViewPager(vp_collect)
+        getUserInfo()
+        FunctionManager.getInstance().addFunction(object : FunctionNoParamNoResult1("loginCallback_home") {
+            override fun function() {
+                getUserInfo()
+            }
+        })
+
+
     }
 
-    override fun onResume() {
-        super.onResume()
-        getUserInfo()
+    override fun onDestroyView() {
+        super.onDestroyView()
+
     }
+
 
     private fun getUserInfo() {
         val bgImg = UserDataUtils.getBgImg()

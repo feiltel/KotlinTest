@@ -133,7 +133,7 @@ class AddCoverFragment : Fragment() {
         uploadMusicFileUrl = coverData.coverMusicPath
         content_et.setText(coverData.coverDes)
         music_btn.text = coverData.musicName
-        uploadMusicName = coverData.musicName
+        uploadMusicName = title_et.text.toString()
         uploadMusicArtist = coverData.artistName
         uploadMusicCoverPath = coverData.musicCoverPath
         selectTagId = coverData.tag_id
@@ -205,7 +205,7 @@ class AddCoverFragment : Fragment() {
 
 
     private fun getAllPicUrl(): String {
-        return "$uploadImgUrl,$uploadImgUrl2,$uploadImgUrl3,$uploadImgUrl4"
+        return "$uploadImgUrl"
     }
 
     private fun saveCover() {
@@ -227,7 +227,7 @@ class AddCoverFragment : Fragment() {
                 "",
                 "",
                 "",
-                uploadMusicName,
+                title_et.text.toString(),
                 uploadMusicArtist,
                 uploadMusicCoverPath,
                 selectTagId,

@@ -1,21 +1,41 @@
 package com.nut2014.kotlintest.view
 
 import android.os.Bundle
+import android.util.DisplayMetrics
+import android.view.LayoutInflater
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
+import android.view.ViewGroup
+import android.view.Window
+import androidx.fragment.app.DialogFragment
+import com.nut2014.baselibrary.uitls.DeviceUtils
+import com.nut2014.eventbuslib.FunctionManager
+import com.nut2014.eventbuslib.annotation.FunctionBusManager
 import com.nut2014.kotlintest.R
 import com.nut2014.kotlintest.base.MyApplication
 import com.nut2014.kotlintest.network.runRxLambda
 import com.nut2014.kotlintest.utils.UserDataUtils
 import kotlinx.android.synthetic.main.activity_login.*
-import org.jetbrains.anko.toast
+import org.jetbrains.anko.support.v4.toast
 
-class LoginActivity : AppCompatActivity() {
+/**
+ * 到站地址选择对话框
+ * Created by Administrator on 2017/3/10 0010.
+ */
 
+class LoginDialog : DialogFragment() {
     private var isRegistered: Boolean = false
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        dialog!!.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog!!.window!!.setBackgroundDrawableResource(android.R.color.transparent)
+        return inflater.inflate(R.layout.activity_login, container)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         setViews(isRegistered)
         login_btn.setOnClickListener {
             login(username_et.text.toString(), userpass_et.text.toString())
@@ -25,10 +45,17 @@ class LoginActivity : AppCompatActivity() {
             setViews(isRegistered)
         }
         close_im.setOnClickListener {
-            finish()
+
+             dismiss()
         }
+    }
 
-
+    override fun onStart() {
+        super.onStart()
+        //设置窗口宽度和屏幕宽度一致
+        val dm = DisplayMetrics()
+        activity!!.windowManager.defaultDisplay.getMetrics(dm)
+        dialog!!.window!!.setLayout(DeviceUtils.getDp(activity, 300), DeviceUtils.getDp(activity, 500))
     }
 
     private fun setViews(isRegistered: Boolean) {
@@ -84,14 +111,17 @@ class LoginActivity : AppCompatActivity() {
         runRxLambda(login, {
             toast(it.msg)
             if (it.code == 1) {
+
                 UserDataUtils.saveUser(it.data)
                 toast(it.msg)
-                setResult(1)
-                finish()
+                dismiss()
+                FunctionManager.getInstance().invokeFunction("loginCallback_cover")
+                FunctionManager.getInstance().invokeFunction("loginCallback_home")
             }
         }, {
             it?.printStackTrace()
             toast("fail")
         })
     }
+
 }

@@ -1,7 +1,5 @@
 package com.nut2014.kotlintest.view
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +9,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.liaoinstan.springview.widget.SpringView
+import com.nut2014.eventbuslib.FunctionManager
+import com.nut2014.eventbuslib.FunctionNoParamNoResult
 import com.nut2014.kotlintest.R
 import com.nut2014.kotlintest.adapter.AliHeader
 import com.nut2014.kotlintest.adapter.HomeListAdapter
@@ -18,7 +18,6 @@ import com.nut2014.kotlintest.base.MyApplication
 import com.nut2014.kotlintest.entity.Cover
 import com.nut2014.kotlintest.network.runRxLambda
 import com.nut2014.kotlintest.utils.CacheUtils
-import com.nut2014.kotlintest.utils.Constant
 import com.nut2014.kotlintest.utils.UserDataUtils
 import kotlinx.android.synthetic.main.fragment_cover.*
 import java.util.*
@@ -50,7 +49,6 @@ class CoverFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         return inflater.inflate(R.layout.fragment_cover, container, false)
     }
 
@@ -65,12 +63,16 @@ class CoverFragment : Fragment() {
                 adapter.addData(coverList)
             }
             getUserListData(pageInt)
-        }else{
-            if(UserDataUtils.isLogin()){
+        } else {
+            if (UserDataUtils.isLogin()) {
                 getUserListData(pageInt)
             }
         }
-
+        FunctionManager.getInstance().addFunction(object : FunctionNoParamNoResult("loginCallback_cover") {
+            override fun function() {
+                getUserListData(pageInt)
+            }
+        })
     }
 
     /**
@@ -82,12 +84,12 @@ class CoverFragment : Fragment() {
         adapter.openLoadAnimation()
         list_rv.layoutManager = StaggeredGridLayoutManager(2, 1)
         adapter.onItemClickListener = BaseQuickAdapter.OnItemClickListener { _, _, position ->
-          /*  val intent = Intent(activity, InfoActivity::class.java)
-            intent.putExtra("cover", dataList[position].toJson())
-            startActivity(intent)*/
+            /*  val intent = Intent(activity, InfoActivity::class.java)
+              intent.putExtra("cover", dataList[position].toJson())
+              startActivity(intent)*/
             val args = Bundle()
             args.putString("cover", dataList[position].toJson())
-            findNavController().navigate(R.id.action_homeFragment_to_infoFragment,args)
+            findNavController().navigate(R.id.action_homeFragment_to_infoFragment, args)
         }
         adapter.setOnLoadMoreListener({
             getUserListData(pageInt)
@@ -144,35 +146,13 @@ class CoverFragment : Fragment() {
         })
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: String) {
-        listener?.onFragmentInteraction(uri)
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-     /*   if (context is OnFragmentInteractionListener) {
-            listener = context
-        } else {
-            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
-        }*/
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == Constant.loginRequstCode && resultCode == 1) {
-            onButtonPressed("")
-            getUserListData(pageInt)
-        }
-    }
-
 
     /**
      * 初始化
      */
     private fun init() {
         dataList = ArrayList()
-        adapter = HomeListAdapter(R.layout.list_item, dataList,param1!! > 0)
+        adapter = HomeListAdapter(R.layout.list_item, dataList, param1!! > 0)
     }
 
     override fun onDetach() {
