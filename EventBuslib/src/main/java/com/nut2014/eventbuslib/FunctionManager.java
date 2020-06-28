@@ -6,7 +6,6 @@ import java.util.Map;
 
 public class FunctionManager {
 
-    //合同编号 承运编号 座机 现付 回付油卡 借款 承 定位 封签
     private static FunctionManager instance;
 
     private Map<String, FunctionNoParamNoResult> noParamNoResultMap;

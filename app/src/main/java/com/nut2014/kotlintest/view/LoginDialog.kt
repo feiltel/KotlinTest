@@ -55,7 +55,7 @@ class LoginDialog : DialogFragment() {
         //设置窗口宽度和屏幕宽度一致
         val dm = DisplayMetrics()
         activity!!.windowManager.defaultDisplay.getMetrics(dm)
-        dialog!!.window!!.setLayout(DeviceUtils.getDp(activity, 300), DeviceUtils.getDp(activity, 500))
+        dialog!!.window!!.setLayout(DeviceUtils.getDp(activity!!, 300), DeviceUtils.getDp(activity!!, 500))
     }
 
     private fun setViews(isRegistered: Boolean) {
